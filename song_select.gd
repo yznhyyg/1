@@ -1,5 +1,7 @@
 extends Control
 
+const UI = preload("res://ui/rhythm_ui.gd")
+
 var songs: Array[Dictionary] = []
 var selected_index := 0
 var title_label: Label
@@ -24,11 +26,7 @@ func _ready() -> void:
 	preview_player.finished.connect(_on_preview_finished)
 
 	# 整个页面只使用深色背景、白色文字和一种紫色强调色，保持简洁现代。
-	var background := ColorRect.new()
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.color = Color("#0B0E17")
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(background)
+	UI.setup(self)
 
 	var page_mark := Label.new()
 	page_mark.text = "SELECT TRACK"
@@ -57,28 +55,30 @@ func _ready() -> void:
 	var hero_card := Panel.new()
 	hero_card.position = Vector2(32, 130)
 	hero_card.size = Vector2(656, 548)
-	hero_card.add_theme_stylebox_override("panel", _make_panel_style(Color("#131824"), 18, Color("#252C3C")))
+	hero_card.add_theme_stylebox_override("panel", _make_panel_style(Color("#131C2E"), 18, Color("#303C57")))
 	add_child(hero_card)
 
 	title_label = Label.new()
 	title_label.position = Vector2(56, 151)
 	title_label.size = Vector2(608, 47)
+	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title_label.add_theme_color_override("font_color", Color("#F5F7FC"))
 	title_label.add_theme_font_size_override("font_size", 30)
 	add_child(title_label)
 
 	var now_playing := Label.new()
-	now_playing.text = "NOW PLAYING"
+	now_playing.text = "TRACK PREVIEW / 曲目试听"
 	now_playing.position = Vector2(56, 190)
 	now_playing.size = Vector2(250, 24)
-	now_playing.add_theme_color_override("font_color", Color("#7C6CFF"))
+	now_playing.add_theme_color_override("font_color", UI.ACCENT)
 	now_playing.add_theme_font_size_override("font_size", 13)
 	add_child(now_playing)
 
 	artwork = TextureRect.new()
 	artwork.position = Vector2(56, 225)
 	artwork.size = Vector2(608, 342)
+	artwork.clip_contents = true
 	artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	artwork.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -103,7 +103,7 @@ func _ready() -> void:
 	add_child(best_score_label)
 
 	var list_title := Label.new()
-	list_title.text = "歌曲列表"
+	list_title.text = "曲库 / LIBRARY"
 	list_title.position = Vector2(32, 708)
 	list_title.size = Vector2(300, 36)
 	list_title.add_theme_color_override("font_color", Color("#F5F7FC"))
@@ -135,6 +135,8 @@ func _ready() -> void:
 	start.pressed.connect(_start_game)
 	add_child(start)
 
+	UI.primary(start)
+	UI.reveal(self)
 	_load_songs()
 	# 登录页已经预加载了全部成绩，这里只读取内存缓存。
 	best_scores = get_tree().get_meta("song_scores", {})
@@ -169,9 +171,9 @@ func _style_secondary_button(button: Button) -> void:
 	button.add_theme_font_size_override("font_size", 17)
 	button.add_theme_color_override("font_color", Color("#DCE1ED"))
 	button.add_theme_color_override("font_hover_color", Color.WHITE)
-	button.add_theme_stylebox_override("normal", _make_button_style(Color("#131824"), Color("#252C3C"), 12))
-	button.add_theme_stylebox_override("hover", _make_button_style(Color("#1C2231"), Color("#7C6CFF"), 12))
-	button.add_theme_stylebox_override("pressed", _make_button_style(Color("#242A3D"), Color("#7C6CFF"), 12))
+	button.add_theme_stylebox_override("normal", _make_button_style(Color("#131C2E"), Color("#303C57"), 12))
+	button.add_theme_stylebox_override("hover", _make_button_style(Color("#1C2231"), UI.ACCENT, 12))
+	button.add_theme_stylebox_override("pressed", _make_button_style(Color("#242A3D"), UI.ACCENT, 12))
 
 func _process(_delta: float) -> void:
 	if preview_player != null and preview_player.playing and not preview_is_fading:
@@ -207,13 +209,14 @@ func _create_song_buttons() -> void:
 		var button := Button.new()
 		button.text = "  %02d     %s" % [index + 1, str(songs[index].get("title", songs[index].get("folder", "未命名歌曲")))]
 		button.custom_minimum_size = Vector2(656, 64)
+		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.add_theme_font_size_override("font_size", 19)
 		button.add_theme_color_override("font_color", Color("#B8C0D2"))
 		button.add_theme_color_override("font_hover_color", Color.WHITE)
 		button.add_theme_stylebox_override("normal", _make_button_style(Color("#111621"), Color("#202738"), 12))
 		button.add_theme_stylebox_override("hover", _make_button_style(Color("#191F2E"), Color("#4D5872"), 12))
-		button.add_theme_stylebox_override("pressed", _make_button_style(Color("#20263A"), Color("#7C6CFF"), 12))
+		button.add_theme_stylebox_override("pressed", _make_button_style(Color("#20263A"), UI.ACCENT, 12))
 		button.pressed.connect(_select_song.bind(index))
 		list_box.add_child(button)
 		song_buttons.append(button)
@@ -242,7 +245,7 @@ func _update_song_button_styles() -> void:
 		var button := song_buttons[index]
 		if index == selected_index:
 			button.add_theme_color_override("font_color", Color.WHITE)
-			button.add_theme_stylebox_override("normal", _make_button_style(Color("#211F3B"), Color("#7C6CFF"), 12))
+			button.add_theme_stylebox_override("normal", _make_button_style(Color("#211F3B"), UI.ACCENT, 12))
 		else:
 			button.add_theme_color_override("font_color", Color("#B8C0D2"))
 			button.add_theme_stylebox_override("normal", _make_button_style(Color("#111621"), Color("#202738"), 12))

@@ -1,5 +1,7 @@
 extends Control
 
+const UI = preload("res://ui/rhythm_ui.gd")
+
 const SupabaseConfig = preload("res://supabase_config.gd")
 
 var speed: float = 1.0
@@ -21,11 +23,13 @@ func _ready() -> void:
 	speed = float(saved.get("note_speed", 1.0))
 	brightness = float(saved.get("artwork_brightness", 0.65))
 	offset = float(saved.get("chart_offset", 0.0))
-	var bg := ColorRect.new()
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.color = Color("#10131D")
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	UI.setup(self)
+	UI.label(self, "PERSONALIZE / 设置", Rect2(40, 30, 640, 35), 16, UI.CYAN)
+	for y in [160, 350, 540]:
+		UI.card(self, Rect2(32, y, 656, 160))
+	UI.label(self, "找到最适合你的手感。", Rect2(40, 755, 640, 40), 24, UI.MUTED)
+	UI.label(self, "流速影响音符移动速度；延迟用于校准听感与判定。", Rect2(40, 813, 640, 40), 18, UI.MUTED)
+	UI.reveal(self)
 	var title := Label.new()
 	title.text = "游戏设置"
 	title.position = Vector2(0, 70)
@@ -34,8 +38,8 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", 42)
 	add_child(title)
 	_add_speed_control()
-	_add_slider("背景亮度", 300, brightness, 0.0, 1.0, 0.01, _brightness_changed, "brightness")
-	_add_slider("谱面延迟（秒）", 430, offset, -0.5, 0.5, 0.01, _offset_changed, "offset")
+	_add_slider("背景亮度", 380, brightness, 0.0, 1.0, 0.01, _brightness_changed, "brightness")
+	_add_slider("谱面延迟（秒）", 570, offset, -0.5, 0.5, 0.01, _offset_changed, "offset")
 	status_label = Label.new()
 	# 720 像素竖屏中居中显示，旧坐标会让文字跑出屏幕右侧。
 	status_label.position = Vector2(60, 1095)
@@ -52,9 +56,7 @@ func _ready() -> void:
 	finish_button.add_theme_font_size_override("font_size", 21)
 	finish_button.add_theme_color_override("font_color", Color.WHITE)
 	finish_button.add_theme_color_override("font_hover_color", Color.WHITE)
-	finish_button.add_theme_stylebox_override("normal", _make_button_style(Color("#6757E8"), Color("#6757E8")))
-	finish_button.add_theme_stylebox_override("hover", _make_button_style(Color("#796AF2"), Color("#9186FF")))
-	finish_button.add_theme_stylebox_override("pressed", _make_button_style(Color("#5547C8"), Color("#5547C8")))
+	UI.primary(finish_button)
 	finish_button.pressed.connect(_finish)
 	add_child(finish_button)
 
@@ -65,47 +67,33 @@ func _ready() -> void:
 	status_label.text = "已使用登录时加载的云端设置"
 
 
-func _make_button_style(color: Color, border_color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.border_color = border_color
-	style.border_width_left = 1
-	style.border_width_top = 1
-	style.border_width_right = 1
-	style.border_width_bottom = 1
-	style.corner_radius_top_left = 16
-	style.corner_radius_top_right = 16
-	style.corner_radius_bottom_left = 16
-	style.corner_radius_bottom_right = 16
-	return style
-
 func _add_speed_control() -> void:
 	var label := Label.new()
 	label.text = "音符流速"
-	label.position = Vector2(40, 180)
+	label.position = Vector2(56, 180)
 	label.size = Vector2(180, 45)
 	label.add_theme_font_size_override("font_size", 24)
 	add_child(label)
 	var minus := Button.new()
 	minus.text = "-"
-	minus.position = Vector2(250, 175)
+	minus.position = Vector2(56, 244)
 	minus.size = Vector2(55, 50)
 	minus.pressed.connect(func(): _change_speed(-0.1))
 	add_child(minus)
 	speed_value = Label.new()
-	speed_value.position = Vector2(320, 180)
+	speed_value.position = Vector2(122, 249)
 	speed_value.size = Vector2(120, 40)
 	speed_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	add_child(speed_value)
 	var plus := Button.new()
 	plus.text = "+"
-	plus.position = Vector2(455, 175)
+	plus.position = Vector2(245, 244)
 	plus.size = Vector2(55, 50)
 	plus.pressed.connect(func(): _change_speed(0.1))
 	add_child(plus)
 	speed_slider = HSlider.new()
-	speed_slider.position = Vector2(520, 185)
-	speed_slider.size = Vector2(160, 30)
+	speed_slider.position = Vector2(330, 254)
+	speed_slider.size = Vector2(326, 30)
 	speed_slider.min_value = 0.1
 	speed_slider.max_value = 12.0
 	speed_slider.step = 0.1
@@ -117,13 +105,13 @@ func _add_speed_control() -> void:
 func _add_slider(caption: String, y: float, value: float, min_value: float, max_value: float, step: float, callback: Callable, kind: String) -> void:
 	var label := Label.new()
 	label.text = caption
-	label.position = Vector2(40, y)
+	label.position = Vector2(56, y)
 	label.size = Vector2(220, 40)
 	label.add_theme_font_size_override("font_size", 24)
 	add_child(label)
 	var slider := HSlider.new()
-	slider.position = Vector2(270, y + 5)
-	slider.size = Vector2(350, 30)
+	slider.position = Vector2(56, y + 64)
+	slider.size = Vector2(600, 30)
 	slider.min_value = min_value
 	slider.max_value = max_value
 	slider.step = step
@@ -131,8 +119,10 @@ func _add_slider(caption: String, y: float, value: float, min_value: float, max_
 	slider.value_changed.connect(callback)
 	add_child(slider)
 	var value_label := Label.new()
-	value_label.position = Vector2(630, y)
-	value_label.size = Vector2(100, 40)
+	value_label.position = Vector2(516, y)
+	value_label.size = Vector2(140, 40)
+	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	value_label.add_theme_color_override("font_color", UI.CYAN)
 	add_child(value_label)
 	if kind == "brightness": brightness_value = value_label
 	else: offset_value = value_label

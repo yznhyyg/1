@@ -1,5 +1,7 @@
 extends Control
 
+const UI = preload("res://ui/rhythm_ui.gd")
+
 const SupabaseConfig = preload("res://supabase_config.gd")
 
 var data: Dictionary = {}
@@ -9,6 +11,12 @@ var score_request: HTTPRequest
 var request_operation := ""
 
 func _ready() -> void:
+	$Background.hide()
+	UI.setup(self)
+	UI.card(self, Rect2(40, 210, 640, 740))
+	move_child(get_child(get_child_count() - 1), 1)
+	UI.label(self, "SESSION COMPLETE", Rect2(56, 50, 608, 40), 16, UI.CYAN)
+	UI.reveal(self)
 	data = get_tree().get_meta("result_data", {})
 	rating = _rating_for_score(int(data.get("score", 0)))
 	$Rating.text = rating
@@ -21,20 +29,24 @@ func _ready() -> void:
 		int(data.get("max_combo", 0))
 	]
 	upload_status = Label.new()
-	upload_status.position = Vector2(110, 515)
-	upload_status.size = Vector2(500, 35)
+	upload_status.position = Vector2(64, 978)
+	upload_status.size = Vector2(592, 80)
 	upload_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upload_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	upload_status.add_theme_font_size_override("font_size", 18)
+	upload_status.add_theme_color_override("font_color", UI.MUTED)
 	add_child(upload_status)
 
 	score_request = HTTPRequest.new()
 	add_child(score_request)
 	score_request.request_completed.connect(_on_score_request_completed)
+	UI.primary($Continue)
 	$Continue.grab_focus()
 	$Continue.pressed.connect(_continue)
 	_check_cloud_best_score()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_ accept") and not $Continue.disabled:
+	if event.is_action_pressed("ui_accept") and not $Continue.disabled:
 		_continue()
 
 func _continue() -> void:

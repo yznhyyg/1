@@ -1,5 +1,7 @@
 extends Node2D
 
+const UI = preload("res://ui/rhythm_ui.gd")
+
 
 # 预加载音符场景。
 # 你的当前文件名如果确实是 note.tscn.tscn，
@@ -131,7 +133,7 @@ func _ready() -> void:
 	combo_label.custom_minimum_size = Vector2(300, 60)
 	combo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	combo_label.add_theme_font_size_override("font_size", 34)
-	combo_label.modulate = Color("#C2185B")
+	combo_label.modulate = UI.CYAN
 	$UI.add_child(combo_label)
 	_update_combo_label()
 	score_label = Label.new()
@@ -215,6 +217,7 @@ func _create_pause_menu() -> void:
 	pause_menu = Panel.new()
 	pause_menu.position = Vector2(160, 430)
 	pause_menu.size = Vector2(400, 380)
+	pause_menu.theme = UI.make_theme()
 	pause_menu.visible = false
 	pause_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	$UI.add_child(pause_menu)
@@ -231,6 +234,7 @@ func _create_pause_menu() -> void:
 	continue_button.text = "继续游戏"
 	continue_button.position = Vector2(80, 110)
 	continue_button.size = Vector2(240, 55)
+	UI.primary(continue_button)
 	continue_button.pressed.connect(_resume_game)
 	pause_menu.add_child(continue_button)
 
@@ -249,6 +253,7 @@ func _create_pause_menu() -> void:
 	pause_menu.add_child(exit_button)
 
 	var pause_button := Button.new()
+	pause_button.theme = UI.make_theme()
 	pause_button.text = "暂停"
 	pause_button.position = Vector2(30, 25)
 	pause_button.size = Vector2(110, 45)

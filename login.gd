@@ -1,5 +1,7 @@
 extends Control
 
+const UI = preload("res://ui/rhythm_ui.gd")
+
 const SupabaseConfig = preload("res://supabase_config.gd")
 const SESSION_FILE := "user://supabase_session.json"
 
@@ -13,54 +15,60 @@ var bootstrap_user_id := ""
 var bootstrap_access_token := ""
 
 func _ready() -> void:
-	var background := ColorRect.new()
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.color = Color("#10131D")
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(background)
+	UI.setup(self)
 
+	UI.card(self, Rect2(56, 330, 608, 520))
+	UI.label(self, "RG  /  RHYTHM GAME", Rect2(56, 66, 608, 40), 17, UI.CYAN)
+	UI.label(self, "每一次敲击，都与节奏共鸣。", Rect2(56, 254, 608, 40), 22, UI.MUTED)
+	UI.label(self, "欢迎回来", Rect2(88, 356, 544, 45), 28)
+	UI.label(self, "邮箱", Rect2(88, 428, 544, 30), 18, UI.MUTED)
+	UI.label(self, "密码", Rect2(88, 544, 544, 30), 18, UI.MUTED)
+	UI.reveal(self)
 	var title := Label.new()
-	title.text = "RHYTHM GAME"
-	title.position = Vector2(0, 180)
-	title.size = Vector2(720, 70)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 46)
+	title.text = "进入节奏"
+	title.position = Vector2(56, 155)
+	title.size = Vector2(608, 80)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	title.add_theme_font_size_override("font_size", 64)
 	add_child(title)
 
 	email_input = LineEdit.new()
 	email_input.placeholder_text = "邮箱"
-	email_input.position = Vector2(160, 360)
-	email_input.size = Vector2(400, 52)
+	email_input.position = Vector2(88, 468)
+	email_input.size = Vector2(544, 64)
 	email_input.text = ""
 	add_child(email_input)
 
 	password_input = LineEdit.new()
 	password_input.placeholder_text = "密码"
 	password_input.secret = true
-	password_input.position = Vector2(160, 430)
-	password_input.size = Vector2(400, 52)
+	password_input.position = Vector2(88, 584)
+	password_input.size = Vector2(544, 64)
 	add_child(password_input)
 
 	var login_button := Button.new()
 	login_button.text = "登录"
-	login_button.position = Vector2(160, 520)
-	login_button.size = Vector2(190, 58)
+	login_button.position = Vector2(88, 698)
+	login_button.size = Vector2(262, 68)
+	UI.primary(login_button)
 	login_button.pressed.connect(_login)
 	add_child(login_button)
 
 	var register_button := Button.new()
 	register_button.text = "注册账号"
-	register_button.position = Vector2(370, 520)
-	register_button.size = Vector2(190, 58)
+	register_button.position = Vector2(370, 698)
+	register_button.size = Vector2(262, 68)
 	register_button.pressed.connect(_register)
 	add_child(register_button)
 
 	message_label = Label.new()
-	message_label.position = Vector2(20, 620)
-	message_label.size = Vector2(680, 80)
+	message_label.position = Vector2(88, 876)
+	message_label.size = Vector2(544, 96)
 	message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	message_label.text = "正在加载中"
+	message_label.text = "登录账号，同步成绩与游戏设置"
+	message_label.add_theme_color_override("font_color", UI.MUTED)
+	message_label.add_theme_font_size_override("font_size", 18)
 	add_child(message_label)
 
 	request = HTTPRequest.new()

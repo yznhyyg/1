@@ -23,38 +23,39 @@ color = Color(0.05, 0.055, 0.08, 1)
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 0
-offset_left = 160.0
-offset_top = 90.0
-offset_right = 560.0
-offset_bottom = 145.0
+offset_left = 56.0
+offset_top = 112.0
+offset_right = 664.0
+offset_bottom = 177.0
 theme_override_font_sizes/font_size = 32
-text = "RESULT"
+text = "演奏结算 / RESULT"
 horizontal_alignment = 1
 
 [node name="Rating" type="Label" parent="."]
 layout_mode = 0
 offset_left = 160.0
-offset_top = 175.0
+offset_top = 265.0
 offset_right = 560.0
-offset_bottom = 280.0
-theme_override_font_sizes/font_size = 72
+offset_bottom = 430.0
+theme_override_font_sizes/font_size = 112
+theme_override_colors/font_color = Color(0.61, 0.53, 1, 1)
 text = "-"
 horizontal_alignment = 1
 
 [node name="Details" type="Label" parent="."]
 layout_mode = 0
 offset_left = 120.0
-offset_top = 310.0
+offset_top = 505.0
 offset_right = 600.0
-offset_bottom = 500.0
+offset_bottom = 845.0
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 
 [node name="Continue" type="Button" parent="."]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 570.0
-offset_right = 460.0
-offset_bottom = 630.0
+offset_left = 40.0
+offset_top = 1156.0
+offset_right = 680.0
+offset_bottom = 1232.0
 theme_override_font_sizes/font_size = 22
-text = "继续（Enter）"
+text = "返回曲库    ENTER →"
