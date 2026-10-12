@@ -1,0 +1,11 @@
+# Godot 自动生成的缓存，不需要上传
+.godot/
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
+
+# 系统文件
+Thumbs.db
+.DS_Store

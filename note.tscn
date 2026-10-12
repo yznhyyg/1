@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://xma5ucw0bplx"]
+
+[ext_resource type="Script" uid="uid://c638m7kdgwn8a" path="res://note.gd" id="1_note"]
+
+[node name="Note" type="Node2D"]
+script = ExtResource("1_note")
+
+[node name="Body" type="TextureRect" parent="."]
+offset_top = -100.0
+offset_right = 100.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Head" type="TextureRect" parent="."]
+offset_right = 100.0
+offset_bottom = 10.0
+mouse_filter = 2
+expand_mode = 1

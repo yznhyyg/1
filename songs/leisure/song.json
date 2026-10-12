@@ -1,0 +1,16 @@
+{
+  "title": "leisure",
+  "chart": "chart.json",
+  "music": "music.ogg",
+  "artwork": "artwork.png",
+  "preview": {
+	"start": 66.0,
+	"duration": 31.0,
+	"fade_in": 1.0,
+	"fade_out": 1.0
+  },
+  "count_in": {
+	"bpm": 240.0,
+	"beats": 4
+  },
+}

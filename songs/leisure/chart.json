@@ -1,0 +1,207 @@
+[
+  {
+	"type": "supertime",
+	"start": 67.0,
+	"end": 83.0
+  },
+  {
+	"lane": 1,
+	"time": 1
+  },
+  {
+	"lane": 2,
+	"time": 1
+  },
+  {
+	"lane": 3,
+	"time": 1.1875
+  },
+  {
+	"lane": 4,
+	"time": 1.25
+  },
+  {
+	"lane": 2,
+	"time": 1.5
+  },
+  {
+	"lane": 4,
+	"time": 1.625,
+	"type": "hold",
+	"duration": 0.25
+  },
+  {
+	"lane": 2,
+	"time": 1.875
+  },
+  {
+	"lane": 3,
+	"time": 2,
+	"type": "hold",
+	"duration": 0.5
+  },
+  {
+	"lane": 1,
+	"time": 2.5,
+	"type": "hold",
+	"duration": 0.375
+  },
+  {
+	"lane": 2,
+	"time": 2.875,
+  },
+  { 
+	"lane": 3,
+	"time": 3,
+  },
+  { 
+	"lane": 4,
+	"time": 3,
+  },
+  {
+	"lane": 2,
+	"time": 3.1875
+  },
+  {
+	"lane": 1,
+	"time": 3.25
+  },
+  {
+	"lane": 2,
+	"time": 3.5
+  },
+  {
+	"lane": 3,
+	"time": 3.625,
+	"type": "hold",
+	"duration": 0.25
+  },
+  {
+	"lane": 2,
+	"time": 3.875
+  },
+  {
+	"lane": 4,
+	"time": 4,
+	"type": "hold",
+	"duration": 0.9
+  },
+  {  
+  "lane": 1,
+  "time": 4.75,
+  "type": "switch_up"
+  },
+  {
+	"lane": 5,
+	"time": 5
+  },
+  {
+	"lane": 6,
+	"time": 5.125
+  },
+  {
+	"lane": 7,
+	"time": 5.25
+  },
+  {
+	"lane": 8,
+	"time": 5.375
+  },
+  {
+	"lane": 5,
+	"time": 5.5
+  },
+  {
+	"lane": 6,
+	"time": 5.625
+  },
+  {
+	"lane": 7,
+	"time": 5.75
+  },
+  {
+	"lane": 8,
+	"time": 5.875
+  },
+  {
+	"lane": 6,
+	"time": 6
+  },
+  {
+	"lane": 7,
+	"time": 6.125
+  },
+  {
+	"lane": 5,
+	"time": 6.25
+  },
+  {
+	"lane": 6,
+	"time": 6.3333
+  },
+  {
+	"lane": 7,
+	"time": 6.4166
+  },
+  {
+	"lane": 6,
+	"time": 6.5
+  },
+  {
+	"lane": 7,
+	"time": 6.5833
+  },
+  {
+	"lane": 8,
+	"time": 6.6666
+  },
+  {
+	"lane": 5,
+	"time": 6.75
+  },
+  {
+	"lane": 8,
+	"time": 6.875
+  },
+  {
+	"lane": 5,
+	"time": 7
+  },
+  {
+	"lane": 6,
+	"time": 7
+  },
+  {
+	"lane": 7,
+	"time": 7.1875
+  },
+  {
+	"lane": 8,
+	"time": 7.25,
+	"type": "hold",
+	"duration": 0.25
+  },
+  {
+	"lane": 6,
+	"time": 7.5
+  },
+  {
+	"lane": 8,
+	"time": 7.625,
+	"type": "hold",
+	"duration": 0.25
+  },
+  {
+	"lane": 5,
+	"time": 7.875
+  },
+  {
+	"lane": 7,
+	"time": 8
+  },
+  {  
+	"lane": 8,
+	"time": 8.5,
+	"type": "switch_down"
+  },
+  ]

@@ -1,0 +1,16 @@
+{
+  "title": "Grandeur",
+  "chart": "grandeur.json",
+  "music": "grandeur.ogg",
+  "artwork": "grandeur.png",
+  "preview": {
+	"start": 58.0,
+	"duration": 32.0,
+	"fade_in": 1.0,
+	"fade_out": 1.0
+  },
+  "count_in": {
+	"bpm": 120.0,
+	"beats": 4
+  },
+}
