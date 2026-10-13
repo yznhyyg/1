@@ -99,6 +99,13 @@ func run() -> void:
 	await process_frame
 	check(current_scene != null and current_scene.scene_file_path == "res://main_menu.tscn", "return to home works")
 	check(current_scene.partner_button.tooltip_text.begins_with("闻序"), "home reflects selected character after return")
+	current_scene.characters_button.pressed.emit()
+	await process_frame
+	await process_frame
+	check(current_scene.scene_file_path == "res://characters.tscn", "visible Characters button opens collection")
+	current_scene._back()
+	await process_frame
+	await process_frame
 	var key := InputEventKey.new()
 	key.keycode = KEY_C
 	key.pressed = true

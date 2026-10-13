@@ -8,6 +8,7 @@ var personal_rating_label: Label
 var partner_portrait: TextureRect
 var start_button: Button
 var partner_button: Button
+var characters_button: Button
 
 func _ready() -> void:
 	UI.setup(self, true)
@@ -86,6 +87,14 @@ func _ready() -> void:
 	start_button.pressed.connect(_start_game)
 	add_child(start_button)
 	start_button.grab_focus()
+	characters_button = Button.new()
+	characters_button.name = "CharactersButton"
+	characters_button.text = "角色  ·  C"
+	characters_button.position = Vector2(44, 704)
+	characters_button.size = Vector2(224, 48)
+	characters_button.add_theme_font_size_override("font_size", 18)
+	characters_button.pressed.connect(_open_characters)
+	add_child(characters_button)
 
 	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
