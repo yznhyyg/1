@@ -22,7 +22,11 @@ func _ready() -> void:
 	if not scores is Dictionary:
 		scores = {}
 	UI.card(self, Rect2(56, 808, 304, 109))
-	personal_rating_label = UI.label(self, "RATING %.3f" % RatingSystem.personal_rating(songs, scores), Rect2(80, 827, 256, 70), 30, UI.CYAN)
+	var rating_heading := UI.label(self, "RATING", Rect2(80, 819, 256, 26), 18, UI.CYAN)
+	rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rating_heading.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(80, 849, 256, 58), 40, Color("#FF75BC"))
+	personal_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	UI.reveal(self)
 	var title := Label.new()

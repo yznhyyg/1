@@ -98,7 +98,7 @@ func run() -> void:
 	root.add_child(home)
 	await process_frame
 	var expected_home := RatingSystem.personal_rating(RatingSystem.load_catalog(), get_meta("song_scores"))
-	check(home.personal_rating_label.text == "RATING %.3f" % expected_home, "home recalculates from best scores and current constants")
+	check(home.personal_rating_label.text == "%.3f" % expected_home, "home recalculates from best scores and current constants")
 	home.queue_free()
 	await process_frame
 	print("Rating tests: ", checks, " checks, ", failures, " failures")
