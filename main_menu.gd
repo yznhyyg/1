@@ -89,7 +89,7 @@ func _ready() -> void:
 	start_button.grab_focus()
 	characters_button = Button.new()
 	characters_button.name = "CharactersButton"
-	characters_button.text = "角色  ·  C"
+	characters_button.text = "角色"
 	characters_button.position = Vector2(44, 704)
 	characters_button.size = Vector2(224, 48)
 	characters_button.add_theme_font_size_override("font_size", 18)

@@ -30,8 +30,8 @@
   "portrait": "res://assets/characters/new_partner.png",
   "accent": "#FFA66E",
   "unlock": {
-    "type": "manual",
-    "description": "完成指定挑战后获得"
+	"type": "manual",
+	"description": "完成指定挑战后获得"
   }
 }
 ```
@@ -51,8 +51,8 @@
 const Partners = preload("res://partner_system.gd")
 
 if Partners.unlock_character(get_tree(), "new_partner"):
-    # 角色已经获得并保存，可以通知玩家。
-    pass
+	# 角色已经获得并保存，可以通知玩家。
+	pass
 ```
 
 也可用 `Partners.select_character(get_tree(), "new_partner")` 选择已拥有角色。
