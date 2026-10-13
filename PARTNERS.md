@@ -91,6 +91,10 @@ python3 tests/check_character_expansion.py
 
 导出游戏时，在导出预设的非资源文件过滤中填写 `*.json`，以包含角色配置 `characters/catalog.json` 和歌曲包 JSON。
 
+## 主页背景
+
+开始界面使用原创深蓝夜景音乐厅背景 `assets/backgrounds/home_midnight_atrium.png`，附加轻微深色遮罩；背景不接收输入。
+
 ## 效果图
 
 ![角色页](docs/previews/characters_wenxu.png)

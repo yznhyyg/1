@@ -107,9 +107,7 @@ func run() -> void:
 		selection._select_song(selected)
 		var song: Dictionary = selection.songs[selected]
 		check(selection.level_label.text == RatingSystem.level_text(song), "song level display")
-		var constant := RatingSystem.constant_for(song)
-		var expected := "RATING %.3f" % RatingSystem.song_rating(constant, 995000) if constant > 0.0 else "定数待设置"
-		check(selection.track_rating_label.text == expected, "best rating on selection page")
+		check(selection.best_score_label.text.contains("0995000"), "best score remains visible on selection page")
 	# Match normal navigation: stop preview playback before leaving selection.
 	selection.preview_player.stop()
 	if selection.preview_tween != null:

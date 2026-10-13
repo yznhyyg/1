@@ -7,7 +7,6 @@ const UI = preload("res://ui/rhythm_ui.gd")
 var songs: Array[Dictionary] = []
 var selected_index := 0
 var level_label: Label
-var track_rating_label: Label
 var title_label: Label
 var artwork: TextureRect
 var best_score_label: Label
@@ -73,8 +72,6 @@ func _ready() -> void:
 
 	level_label = UI.label(self, "LV —", Rect2(504, 151, 160, 47), 24, UI.CYAN)
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	track_rating_label = UI.label(self, "RATING 0.000", Rect2(438, 648, 226, 26), 17, UI.ACCENT)
-	track_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var now_playing := Label.new()
 	now_playing.text = "TRACK PREVIEW / 曲目试听"
 	now_playing.position = Vector2(56, 190)
@@ -251,10 +248,6 @@ func _update_best_score_display() -> void:
 		return
 	var song_folder := str(songs[selected_index].get("folder", ""))
 	var song_id := song_folder.get_file()
-	var constant := RatingSystem.constant_for(songs[selected_index])
-	var record_for_rating = best_scores.get(song_id, {})
-	var best_score := int(record_for_rating.get("best_score", 0)) if record_for_rating is Dictionary else 0
-	track_rating_label.text = "RATING %.3f" % RatingSystem.song_rating(constant, best_score) if constant > 0.0 else "定数待设置"
 	if not best_scores.has(song_id):
 		best_score_label.text = "BEST   —          ·          最高分   0000000"
 		return

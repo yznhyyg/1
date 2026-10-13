@@ -11,6 +11,23 @@ var partner_button: Button
 
 func _ready() -> void:
 	UI.setup(self, true)
+	var background := TextureRect.new()
+	background.name = "HomeBackground"
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.texture = load("res://assets/backgrounds/home_midnight_atrium.png")
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+	if background.texture != null:
+		# The opaque picture replaces the procedural backdrop; avoid drawing both.
+		get_child(0).hide()
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.035, 0.059, 0.114, 0.22)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
 	# The portrait is also visible when previewing this scene in the editor.
 	# Actual ownership is granted only by the successful login flow.
 	partner_portrait = TextureRect.new()
