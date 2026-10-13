@@ -38,7 +38,7 @@ func _ready() -> void:
 	partner_portrait.texture = PartnerSystem.portrait_texture(character)
 	partner_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	partner_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	partner_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	partner_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	partner_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	partner_portrait.anchor_left = 1.0
 	partner_portrait.anchor_right = 1.0

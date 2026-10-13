@@ -37,7 +37,7 @@ func _ready() -> void:
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
 	portrait_placeholder = UI.label(self, "立绘待补充", Rect2(400, 478, 240, 40), 20, UI.MUTED)
 	name_label = UI.label(self, "", Rect2(56, 274, 256, 60), 38)
