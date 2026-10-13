@@ -116,10 +116,10 @@ func _select(id: String) -> void:
 	var active := str(get_tree().get_meta("partner_profile", {}).get("active", "")) if owned else ""
 	var unlock = character.get("unlock", {})
 	var unlock_text := str(unlock.get("description", "等待解锁")) if unlock is Dictionary else "等待解锁"
-	ownership_label.text = "已拥有 · 当前伙伴" if owned and active == id else ("已拥有" if owned else "未拥有 · " + unlock_text)
+	ownership_label.text = "已拥有 · 当前上场" if owned and active == id else ("已拥有" if owned else "未拥有 · " + unlock_text)
 	ownership_label.add_theme_color_override("font_color", accent if owned else UI.MUTED)
 	action_button.disabled = not owned or active == id
-	action_button.text = "当前主页伙伴" if owned and active == id else ("设为主页伙伴" if owned else "尚未拥有")
+	action_button.text = "当前上场角色" if owned and active == id else ("设为上场角色" if owned else "尚未拥有")
 	_refresh_list()
 
 func _refresh_list() -> void:
@@ -131,7 +131,7 @@ func _refresh_list() -> void:
 		var owned := Partners.is_owned(get_tree(), id)
 		if owned:
 			count += 1
-		var state := "当前伙伴" if owned and active == id else ("已拥有" if owned else "未解锁")
+		var state := "当前上场" if owned and active == id else ("已拥有" if owned else "未解锁")
 		var button := character_buttons[index]
 		button.text = "%s   ·   %s" % [str(character.get("name", id)), state]
 		button.tooltip_text = button.text
@@ -143,7 +143,7 @@ func _choose_partner() -> void:
 		return
 	if Partners.select_character(get_tree(), selected_id):
 		_select(selected_id)
-		status_label.text = "已将 %s 设为主页伙伴" % name_label.text
+		status_label.text = "已将 %s 设为上场角色" % name_label.text
 	else:
 		status_label.text = "暂时无法保存伙伴选择，请稍后重试"
 

@@ -7,9 +7,10 @@
 
 - 在主页点击 Enter 下方的 **角色** 按钮、点击人物，或按 **C**，进入角色页。
 - 角色页展示立绘、名字、称号、简介、台词和解锁说明。
-- 下方收藏列表展示所有配置角色，以及“当前伙伴 / 已拥有 / 未解锁”状态。
-- 已拥有的角色可设为主页伙伴；未拥有的角色可以查看资料，但无法选择。
-- 返回主页后显示当前选择的角色；**Esc** 返回。
+- 下方收藏列表展示所有配置角色，以及“当前上场 / 已拥有 / 未解锁”状态。
+- 已拥有的角色可设为上场角色；同一时间只有一个上场角色，未拥有的角色可以查看资料，但无法选择。
+- 返回开始界面后，同步显示上场角色的立绘与专属背景；**Esc** 返回。
+- 浏览角色资料不会改变上场角色，只有点击“设为上场角色”才会替换当前选择。
 - 直接运行场景可以预览界面，没有登录时不会授予角色或保存选择。
 
 ## 添加新角色
@@ -28,6 +29,7 @@
   "description": "角色简介，建议控制在约 100 字以内。",
   "quote": "角色的一句台词。",
   "portrait": "res://assets/characters/new_partner.png",
+  "background": "res://assets/backgrounds/new_partner_background.png",
   "accent": "#FFA66E",
   "unlock": {
 	"type": "manual",
@@ -37,6 +39,8 @@
 ```
 
 `id` 必须唯一。立绘支持 Godot 的 Texture2D 资源，推荐使用透明 PNG；缺失或无效的立绘显示“立绘待补充”。
+`portrait` 和 `background` 分别指定该角色的立绘与开始界面背景。背景推荐竖屏、较暗的图片，保持白色游戏名和按钮清晰。未设置或资源无效时，背景会回退到默认夜景。
+
 名字、称号、简介和台词建议保持简短，长文本会限制行数以保护页面布局。
 
 ### 登录赠送与奖励解锁
@@ -55,7 +59,7 @@ if Partners.unlock_character(get_tree(), "new_partner"):
 	pass
 ```
 
-也可用 `Partners.select_character(get_tree(), "new_partner")` 选择已拥有角色。
+也可用 `Partners.select_character(get_tree(), "new_partner")` 将已拥有角色设为上场角色。它会替换存档里的单个 `active` ID，其他角色的拥有状态不变。
 不存在、未拥有或未登录时无法选择；重复解锁不会产生重复记录。
 将 JSON 和立绘加入项目后，重新进入角色页即可读取新角色，不需要为每个角色新建场景。
 
@@ -93,7 +97,9 @@ python3 tests/check_character_expansion.py
 
 ## 主页背景
 
-开始界面使用原创深蓝夜景音乐厅背景 `assets/backgrounds/home_midnight_atrium.png`，附加轻微深色遮罩；背景不接收输入。
+开始界面从上场角色的 `background` 配置读取图片，附加轻微深色遮罩；背景不接收输入。闻序绑定原创夜景音乐厅 `assets/backgrounds/home_midnight_atrium.png`。
+
+本功能作用于登录后的开始界面（含 Enter、Rating、角色按钮），邮箱和密码的登录页不变。
 
 ## 效果图
 

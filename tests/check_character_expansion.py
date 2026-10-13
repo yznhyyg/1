@@ -19,7 +19,7 @@ def main():
         catalog.append({
             "id": "fixture_partner", "name": "测试伙伴", "title": "仅用于验证扩展",
             "description": "临时测试角色，不加入正式仓库。", "quote": "测试切换与存档。",
-            "portrait": "res://icon.svg", "accent": "#FFA66E",
+            "portrait": "res://icon.svg", "background": "res://icon.svg", "accent": "#FFA66E",
             "unlock": {"type": "manual", "description": "测试解锁"},
         })
         catalog_path.write_text(json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8")
