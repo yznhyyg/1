@@ -1,19 +1,100 @@
 extends RefCounted
 
+const CATALOG_PATH := "res://characters/catalog.json"
 const STARTER_ID := "wenxu"
 const STARTER_NAME := "闻序"
 const STARTER_PORTRAIT := "res://assets/characters/wenxu.png"
 
-static func grant_starter(tree: SceneTree, storage_directory: String = "user://") -> Dictionary:
+static func load_catalog(path: String = CATALOG_PATH) -> Array[Dictionary]:
+	var characters: Array[Dictionary] = []
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		push_warning("无法读取角色配置：" + path)
+		return characters
+	var saved = JSON.parse_string(file.get_as_text())
+	if not saved is Array:
+		push_warning("角色配置必须是数组：" + path)
+		return characters
+	var seen: Dictionary = {}
+	for item in saved:
+		if not item is Dictionary:
+			continue
+		var id := str(item.get("id", "")).strip_edges()
+		if id.is_empty() or seen.has(id):
+			continue
+		seen[id] = true
+		item["id"] = id
+		characters.append(item)
+	return characters
+
+static func get_character(id: String) -> Dictionary:
+	for character in load_catalog():
+		if str(character.get("id", "")) == id:
+			return character
+	return {}
+
+static func portrait_texture(character: Dictionary) -> Texture2D:
+	var path := str(character.get("portrait", ""))
+	if not path.begins_with("res://") or not ResourceLoader.exists(path):
+		return null
+	var resource = load(path)
+	return resource if resource is Texture2D else null
+
+static func user_id(tree: SceneTree) -> String:
 	var session = tree.get_meta("supabase_session", {})
 	var user = session.get("user", {}) if session is Dictionary else {}
-	var user_id := str(user.get("id", "")) if user is Dictionary else ""
-	if user_id.is_empty():
-		if tree.has_meta("partner_profile"):
-			tree.remove_meta("partner_profile")
+	return str(user.get("id", "")) if user is Dictionary else ""
+
+static func profile_path(tree: SceneTree, storage_directory: String = "user://") -> String:
+	var id := user_id(tree)
+	return "" if id.is_empty() else storage_directory.path_join("partners_" + id.sha256_text() + ".json")
+
+static func _profile(tree: SceneTree) -> Dictionary:
+	var id := user_id(tree)
+	if id.is_empty() or str(tree.get_meta("partner_profile_user", "")) != id:
 		return {}
-	# Only a hash of the account ID is used in the filename; no credentials are stored.
-	var path := storage_directory.path_join("partners_" + user_id.sha256_text() + ".json")
+	var profile = tree.get_meta("partner_profile", {})
+	return profile if profile is Dictionary else {}
+
+static func is_owned(tree: SceneTree, id: String) -> bool:
+	var owned = _profile(tree).get("owned", [])
+	return owned is Array and owned.has(id)
+
+static func active_character(tree: SceneTree) -> Dictionary:
+	var id := str(_profile(tree).get("active", ""))
+	if is_owned(tree, id):
+		var character := get_character(id)
+		if not character.is_empty():
+			return character
+	# Editor/guest previews can show the starter without granting ownership.
+	return get_character(STARTER_ID)
+
+static func _store(tree: SceneTree, profile: Dictionary, storage_directory: String) -> bool:
+	var path := profile_path(tree, storage_directory)
+	if path.is_empty():
+		return false
+	# Write separately before replacing the current file so incomplete writes cannot erase it.
+	var temporary := path + ".tmp"
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(profile))
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+		return false
+	return DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path)) == OK
+
+static func grant_starter(tree: SceneTree, storage_directory: String = "user://") -> Dictionary:
+	var id := user_id(tree)
+	if id.is_empty():
+		for key in ["partner_profile", "partner_profile_user"]:
+			if tree.has_meta(key):
+				tree.remove_meta(key)
+		return {}
+	var path := profile_path(tree, storage_directory)
 	var profile: Dictionary = {}
 	if FileAccess.file_exists(path):
 		var file := FileAccess.open(path, FileAccess.READ)
@@ -21,19 +102,51 @@ static func grant_starter(tree: SceneTree, storage_directory: String = "user://"
 			var saved = JSON.parse_string(file.get_as_text())
 			if saved is Dictionary:
 				profile = saved
-	var owned = profile.get("owned", [])
-	if not owned is Array:
-		owned = []
-	if not owned.has(STARTER_ID):
-		owned.append(STARTER_ID)
+	var previous = profile.get("owned", [])
+	var owned: Array[String] = []
+	if previous is Array:
+		for item in previous:
+			if item is String and not item.is_empty() and not owned.has(item):
+				owned.append(item)
+	var catalog := load_catalog()
+	for character in catalog:
+		var unlock = character.get("unlock", {})
+		if unlock is Dictionary and str(unlock.get("type", "manual")) == "login":
+			var character_id := str(character["id"])
+			if not owned.has(character_id):
+				owned.append(character_id)
 	profile["owned"] = owned
-	# The initial partner is available on every device after login.
-	if str(profile.get("active", "")).is_empty() or not owned.has(profile.get("active")):
-		profile["active"] = STARTER_ID
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(profile))
-	else:
-		push_warning("伙伴数据暂时无法保存，初始伙伴仍在本次登录中可用。")
+	var active := str(profile.get("active", ""))
+	if not owned.has(active) or get_character(active).is_empty():
+		profile["active"] = ""
+		for character in catalog:
+			if owned.has(str(character["id"])):
+				profile["active"] = str(character["id"])
+				break
+	if not _store(tree, profile, storage_directory):
+		push_warning("角色数据暂时无法保存，登录赠送的角色仍在本次登录中可用。")
 	tree.set_meta("partner_profile", profile)
+	tree.set_meta("partner_profile_user", id)
 	return profile
+
+static func unlock_character(tree: SceneTree, id: String, storage_directory: String = "user://") -> bool:
+	if _profile(tree).is_empty() or get_character(id).is_empty():
+		return false
+	if is_owned(tree, id):
+		return true
+	var profile := _profile(tree).duplicate(true)
+	profile["owned"].append(id)
+	if not _store(tree, profile, storage_directory):
+		return false
+	tree.set_meta("partner_profile", profile)
+	return true
+
+static func select_character(tree: SceneTree, id: String, storage_directory: String = "user://") -> bool:
+	if not is_owned(tree, id) or get_character(id).is_empty():
+		return false
+	var profile := _profile(tree).duplicate(true)
+	profile["active"] = id
+	if not _store(tree, profile, storage_directory):
+		return false
+	tree.set_meta("partner_profile", profile)
+	return true

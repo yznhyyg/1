@@ -7,6 +7,7 @@ const UI = preload("res://ui/rhythm_ui.gd")
 var personal_rating_label: Label
 var partner_portrait: TextureRect
 var start_button: Button
+var partner_button: Button
 
 func _ready() -> void:
 	UI.setup(self, true)
@@ -14,7 +15,8 @@ func _ready() -> void:
 	# Actual ownership is granted only by the successful login flow.
 	partner_portrait = TextureRect.new()
 	partner_portrait.name = "PartnerPortrait"
-	partner_portrait.texture = load(PartnerSystem.STARTER_PORTRAIT)
+	var character := PartnerSystem.active_character(get_tree())
+	partner_portrait.texture = PartnerSystem.portrait_texture(character)
 	partner_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	partner_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	partner_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -26,6 +28,24 @@ func _ready() -> void:
 	partner_portrait.offset_top = 164
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
+	if partner_portrait.texture == null:
+		UI.label(self, "立绘待补充", Rect2(330, 580, 320, 48), 20, UI.MUTED)
+	# A transparent hit area stays to the right of the home controls.
+	partner_button = Button.new()
+	partner_button.name = "OpenCharacters"
+	partner_button.anchor_left = 1.0
+	partner_button.anchor_right = 1.0
+	partner_button.offset_left = -438
+	partner_button.offset_right = -20
+	partner_button.offset_top = 164
+	partner_button.offset_bottom = 1094
+	partner_button.focus_mode = Control.FOCUS_NONE
+	partner_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	partner_button.tooltip_text = str(character.get("name", "角色")) + " · 查看角色（C）"
+	for state in ["normal", "hover", "pressed", "focus"]:
+		partner_button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	partner_button.pressed.connect(_open_characters)
+	add_child(partner_button)
 
 	UI.label(self, "RHYTHM\nGAME", Rect2(44, 218, 244, 156), 44)
 	var songs := RatingSystem.load_catalog()
@@ -50,13 +70,18 @@ func _ready() -> void:
 	add_child(start_button)
 	start_button.grab_focus()
 
-	var tip := UI.label(self, "TIP / 让每一个音符，都成为你的高光。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
+	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
 		_start_game()
+	elif event is InputEventKey and event.pressed and not event.echo and (event.keycode == KEY_C or event.physical_keycode == KEY_C):
+		_open_characters()
+
+func _open_characters() -> void:
+	get_tree().change_scene_to_file("res://characters.tscn")
 
 func _start_game() -> void:
 	get_tree().change_scene_to_file("res://song_select.tscn")

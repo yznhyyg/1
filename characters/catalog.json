@@ -1,0 +1,15 @@
+[
+  {
+    "id": "wenxu",
+    "name": "闻序",
+    "title": "节奏的同行者",
+    "description": "沉稳而敏锐，习惯在喧闹中捕捉细微的节拍。比起说教，他更愿意陪你把一首歌练到满意。",
+    "quote": "不必追赶别人，找到你的节奏。",
+    "portrait": "res://assets/characters/wenxu.png",
+    "accent": "#66E7DA",
+    "unlock": {
+      "type": "login",
+      "description": "登录即可获得"
+    }
+  }
+]
