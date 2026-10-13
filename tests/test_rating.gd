@@ -37,7 +37,9 @@ func run() -> void:
 		check(RatingSystem.grade_for(score) == "D", "D grade")
 	for value in [null, "9.5", 0.0, 0.9, 10.1, INF, NAN]:
 		near(RatingSystem.constant_for({"constant": value}), 0.0, "invalid or unset constant")
-	check(RatingSystem.level_text({"constant": 9.5}) == "LV 9.5", "one decimal display")
+	for example in [[1.0, "LV 1"], [8.5, "LV 8"], [8.6, "LV 8"], [8.7, "LV 8+"], [8.9, "LV 8+"], [9.0, "LV 9"], [9.5, "LV 9"], [9.7, "LV 9+"], [10.0, "LV 10"]]:
+		check(RatingSystem.level_text({"constant": example[0]}) == example[1], "integer / plus level display")
+	near(RatingSystem.song_rating(8.7, 998000), 13.05, "display formatting does not truncate rating constant")
 	near(RatingSystem.song_rating(1.0, 998000), 1.5, "minimum level")
 	near(RatingSystem.song_rating(10.0, 998000), 15.0, "maximum level")
 	near(RatingSystem.personal_rating([], {}), 0.0, "empty library")

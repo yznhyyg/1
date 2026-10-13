@@ -17,7 +17,11 @@ static func constant_for(song: Dictionary) -> float:
 
 static func level_text(song: Dictionary) -> String:
 	var constant := constant_for(song)
-	return "LV %.1f" % constant if constant > 0.0 else "LV —"
+	if constant <= 0.0:
+		return "LV —"
+	# Compare integer tenths to avoid floating-point errors at values like 8.7.
+	var tenths := roundi(constant * 10.0) % 10
+	return "LV %d%s" % [int(constant), "+" if tenths >= 7 else ""]
 
 static func grade_for(score: int) -> String:
 	for index in range(SCORE_POINTS.size() - 1, -1, -1):

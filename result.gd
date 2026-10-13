@@ -61,7 +61,7 @@ func _ready() -> void:
 			break
 	var summary := "定数待设置 · 本曲暂不计入 Rating"
 	if constant > 0.0:
-		summary = "LV %.1f  ·  本次 RATING %.3f" % [constant, RatingSystem.song_rating(constant, int(data.get("score", 0)))]
+		summary = "%s  ·  本次 RATING %.3f" % [RatingSystem.level_text({"constant": constant}), RatingSystem.song_rating(constant, int(data.get("score", 0)))]
 	summary += "\n个人 RATING %.3f" % RatingSystem.personal_rating(songs, cached)
 	song_rating_label = UI.label(self, summary, Rect2(64, 816, 592, 100), 20, UI.CYAN)
 	song_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
