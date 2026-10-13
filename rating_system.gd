@@ -75,6 +75,10 @@ static func personal_rating(songs: Array[Dictionary], scores: Dictionary) -> flo
 		total += ratings[index]
 	return total / float(BEST_COUNT)
 
+static func increase_text(increase: float) -> String:
+	var displayed := "%.3f" % maxf(increase, 0.0)
+	return "（+0）" if displayed == "0.000" else "（+%s）" % displayed
+
 static func remember_best(scores: Dictionary, result: Dictionary) -> void:
 	var song_id := str(result.get("song_id", ""))
 	if song_id.is_empty():

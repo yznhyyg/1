@@ -9,6 +9,11 @@ const SupabaseConfig = preload("res://supabase_config.gd")
 var data: Dictionary = {}
 var rating := "D"
 var song_rating_label: Label
+var personal_rating_label: Label
+var rating_increase_label: Label
+var rating_before := 0.0
+var rating_after := 0.0
+var rating_increase := 0.0
 var upload_status: Label
 var score_request: HTTPRequest
 var request_operation := ""
@@ -51,20 +56,32 @@ func _ready() -> void:
 	var cached = get_tree().get_meta("song_scores", {})
 	if not cached is Dictionary:
 		cached = {}
+	var songs := RatingSystem.load_catalog()
+	rating_before = RatingSystem.personal_rating(songs, cached)
 	RatingSystem.remember_best(cached, data)
 	get_tree().set_meta("song_scores", cached)
-	var songs := RatingSystem.load_catalog()
+	rating_after = RatingSystem.personal_rating(songs, cached)
+	rating_increase = maxf(rating_after - rating_before, 0.0)
 	var constant := 0.0
 	for song in songs:
 		if str(song.get("folder", "")).get_file() == str(data.get("song_id", "")):
 			constant = RatingSystem.constant_for(song)
 			break
-	var summary := "定数待设置 · 本曲暂不计入 Rating"
-	if constant > 0.0:
-		summary = "%s  ·  本次 RATING %.3f" % [RatingSystem.level_text({"constant": constant}), RatingSystem.song_rating(constant, int(data.get("score", 0)))]
-	summary += "\n个人 RATING %.3f" % RatingSystem.personal_rating(songs, cached)
-	song_rating_label = UI.label(self, summary, Rect2(64, 816, 592, 100), 20, UI.CYAN)
+	song_rating_label = UI.label(self, RatingSystem.level_text({"constant": constant}), Rect2(64, 765, 592, 38), 22, UI.CYAN)
 	song_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var heading := UI.label(self, "RATING", Rect2(64, 808, 592, 28), 18, UI.MUTED)
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var rating_row := HBoxContainer.new()
+	rating_row.position = Vector2(64, 841)
+	rating_row.size = Vector2(592, 72)
+	rating_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	rating_row.add_theme_constant_override("separation", 12)
+	rating_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(rating_row)
+	personal_rating_label = UI.label(rating_row, "%.3f" % rating_after, Rect2(), 44, Color("#FF75BC"))
+	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	rating_increase_label = UI.label(rating_row, RatingSystem.increase_text(rating_increase), Rect2(), 24, UI.CYAN)
+	rating_increase_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept") and not $Continue.disabled:

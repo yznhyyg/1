@@ -62,6 +62,11 @@ func run() -> void:
 	RatingSystem.remember_best(best, {"song_id": "a", "score": 1000000})
 	check(best["a"]["best_score"] == 1000000, "new personal best")
 
+	check(RatingSystem.increase_text(0.637) == "（+0.637）", "first gain formatting")
+	check(RatingSystem.increase_text(0.5) == "（+0.500）", "gain has three decimals")
+	check(RatingSystem.increase_text(0.0) == "（+0）", "zero gain has no decimals")
+	check(RatingSystem.increase_text(0.0001) == "（+0）", "rounded zero has no decimals")
+
 	# Exercise actual result -> song selection -> home presentation without cloud credentials.
 	set_meta("song_scores", {"leisure": {"best_score": 990000}})
 	set_meta("result_data", {"song_id": "leisure", "score": 995000})
@@ -69,9 +74,26 @@ func run() -> void:
 	root.add_child(result)
 	await process_frame
 	check(get_meta("song_scores")["leisure"]["best_score"] == 995000, "result updates session best even without cloud upload")
-	check(result.song_rating_label.text.contains("个人 RATING"), "result rating display")
+	check(not result.song_rating_label.text.contains("RATING"), "level row omits single song rating")
+	var songs := RatingSystem.load_catalog()
+	var old_total := RatingSystem.personal_rating(songs, {"leisure": {"best_score": 990000}})
+	var new_total := RatingSystem.personal_rating(songs, get_meta("song_scores"))
+	near(result.rating_before, old_total, "capture total before adding this score")
+	near(result.rating_after, new_total, "total after adding this score")
+	near(result.rating_increase, new_total - old_total, "gain is total rating difference")
+	check(result.personal_rating_label.text == "%.3f" % new_total, "large result rating shows total")
+	check(result.rating_increase_label.text == RatingSystem.increase_text(new_total - old_total), "smaller result rating shows gain")
 	check(not result.get_node("Continue").disabled, "offline continue remains available")
 	result.queue_free()
+	await process_frame
+	set_meta("result_data", {"song_id": "leisure", "score": 700000})
+	var lower_result = load("res://result.tscn").instantiate()
+	root.add_child(lower_result)
+	await process_frame
+	near(lower_result.rating_after, new_total, "lower score cannot reduce total")
+	check(lower_result.rating_increase_label.text == "（+0）", "no improvement shows +0")
+	check(get_meta("song_scores")["leisure"]["best_score"] == 995000, "lower result preserves best")
+	lower_result.queue_free()
 	await process_frame
 	var selection = load("res://song_select.tscn").instantiate()
 	root.add_child(selection)
