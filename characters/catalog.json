@@ -12,5 +12,21 @@
 	  "description": "登录即可获得"
 	},
 	"background": "res://assets/backgrounds/home_midnight_atrium.png"
+  },
+  {
+	"id": "qiche",
+	"name": "祁澈",
+	"title": "暮色中的听音者",
+	"description": "温和洒脱的唱片收藏家，喜欢在日落时分戴上耳机。他相信再细微的节奏，也值得被认真听见。",
+	"quote": "慢慢听，好风景总在下一拍。",
+	"portrait": "res://assets/characters/qiche.png",
+	"background": "res://assets/backgrounds/home_qiche_dusk.png",
+	"accent": "#E7B87D",
+	"unlock": {
+	  "type": "song_score",
+	  "song_id": "leisure",
+	  "score": 1000000,
+	  "description": "Leisure 达到满分 1,000,000"
+	}
   }
 ]

@@ -148,6 +148,36 @@ static func unlock_character(tree: SceneTree, id: String, storage_directory: Str
 	tree.set_meta("partner_profile", profile)
 	return true
 
+static func grant_score_rewards(tree: SceneTree, scores: Dictionary, storage_directory: String = "user://") -> Array[Dictionary]:
+	var rewards: Array[Dictionary] = []
+	if _profile(tree).is_empty():
+		return rewards
+	var profile := _profile(tree).duplicate(true)
+	for character in load_catalog():
+		var id := str(character["id"])
+		if profile["owned"].has(id):
+			continue
+		var unlock = character.get("unlock", {})
+		if not unlock is Dictionary or str(unlock.get("type", "")) != "song_score":
+			continue
+		var song_id := str(unlock.get("song_id", ""))
+		var required_score := int(unlock.get("score", 0))
+		var record = scores.get(song_id, {})
+		if song_id.is_empty() or required_score <= 0 or not record is Dictionary:
+			continue
+		if int(record.get("best_score", 0)) < required_score:
+			continue
+		profile["owned"].append(id)
+		rewards.append(character)
+	# Preserve the equipped character; only announce rewards after they are saved.
+	if not rewards.is_empty():
+		if not _store(tree, profile, storage_directory):
+			push_warning("角色奖励暂时无法保存，下次读取成绩时会再次尝试。")
+			rewards.clear()
+		else:
+			tree.set_meta("partner_profile", profile)
+	return rewards
+
 static func select_character(tree: SceneTree, id: String, storage_directory: String = "user://") -> bool:
 	if not is_owned(tree, id) or get_character(id).is_empty():
 		return false

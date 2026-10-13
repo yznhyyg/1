@@ -230,6 +230,9 @@ func _finish_cloud_scores_load(result: int, response_code: int, response) -> voi
 
 func _start_main_menu() -> void:
 	PartnerSystem.grant_starter(get_tree())
+	var scores = get_tree().get_meta("song_scores", {})
+	if scores is Dictionary:
+		PartnerSystem.grant_score_rewards(get_tree(), scores)
 	_load_local_song_catalog()
 	get_tree().change_scene_to_file("res://main_menu.tscn")
 

@@ -1,6 +1,6 @@
 # 角色系统
 
-目前只有初始伙伴 **闻序**。登录后自动获得；旧版本的拥有记录继续保留。
+目前有两位伙伴：**闻序**登录后自动获得；**祁澈**在 Leisure 达到满分 **1,000,000** 后获得。旧版本的拥有记录继续保留。
 角色只用于伙伴展示，不修改分数、判定或 Rating。
 
 ## 在游戏中使用
@@ -46,8 +46,12 @@
 ### 登录赠送与奖励解锁
 
 - `unlock.type` 为 `login`：每次登录自动检查并补发该角色，不会重复添加。
+- `unlock.type` 为 `song_score`：按 `song_id` 对应歌曲的最高分检查 `score` 门槛，在结算和登录读取历史成绩后自动解锁。祁澈使用 `song_id: "leisure"`、`score: 1000000`，SSS+ 或 Full Combo 本身不等于满分。
 - `unlock.type` 为 `manual`（或省略）：角色默认未解锁，需要在实际任务或奖励逻辑中调用解锁接口。
-- `unlock.description` 只是给玩家看的说明文字，不会自动创建任务或检查任务条件。
+- `unlock.description` 是给玩家看的说明文字；实际条件由 `type`、`song_id` 和 `score` 决定。歌曲编号使用歌曲文件夹名。
+
+满分结算会显示“新伙伴已获得 · 祁澈”，获得角色不会自动切换上场选择。在角色页选择祁澈并设为上场后，主页会显示他的立绘和黄昏听音室背景。
+更新前已有 Leisure 满分云端纪录的账号，下次登录读取成绩后会补发；成绩上传失败时，本次满分也能在本地解锁。
 
 奖励条件达成时：
 
@@ -78,7 +82,7 @@ user://partners_<账号ID的SHA256>.json
 - 选择保存成功后才更新当前角色，文件通过临时文件替换写入。
 - 不保存令牌或密码。
 
-目前角色收藏与选择是**本地按账号存储**，没有新增云端角色表。换设备登录仍会收到所有登录赠送角色；其他奖励解锁及当前选择尚不跨设备同步。
+目前角色收藏与选择是**本地按账号存储**，没有新增云端角色表。换设备登录仍会收到所有登录赠送角色，并根据成功读取的云端歌曲最高分补发成绩奖励角色；手动奖励及当前选择尚不跨设备同步。尚未上传的本地满分解锁也不会同步到其他设备。
 
 ## 验证
 
@@ -86,18 +90,19 @@ user://partners_<账号ID的SHA256>.json
 godot --headless --editor --import --quit
 godot --headless --audio-driver Dummy --script res://tests/test_characters.gd
 godot --headless --audio-driver Dummy --script res://tests/test_partners.gd
+godot --headless --audio-driver Dummy --script res://tests/test_score_rewards.gd
 godot --headless --audio-driver Dummy --script res://tests/test_rating.gd
 python3 tests/check_character_expansion.py
 ```
 
-角色测试包含旧存档兼容、账号隔离、无效选择拦截、点击入口、C 快捷键、资料显示与返回主页。
+角色测试包含旧存档兼容、账号隔离、无效选择拦截、点击入口、C 快捷键、资料显示与返回主页。成绩奖励测试验证满分边界、指定歌曲、重复奖励、保存失败、历史纪录补发和角色/背景切换。
 扩展验证脚本会在临时项目副本加入手动解锁的第二个角色，验证解锁、选择、重新登录及动态立绘；测试角色不会加入正式配置。
 
 导出游戏时，在导出预设的非资源文件过滤中填写 `*.json`，以包含角色配置 `characters/catalog.json` 和歌曲包 JSON。
 
 ## 主页背景
 
-开始界面从上场角色的 `background` 配置读取图片，附加轻微深色遮罩；背景不接收输入。闻序绑定原创夜景音乐厅 `assets/backgrounds/home_midnight_atrium.png`。
+开始界面从上场角色的 `background` 配置读取图片，附加轻微深色遮罩；背景不接收输入。闻序绑定原创夜景音乐厅 `assets/backgrounds/home_midnight_atrium.png`；祁澈绑定黄昏听音室 `assets/backgrounds/home_qiche_dusk.png`。
 
 本功能作用于登录后的开始界面（含 Enter、Rating、角色按钮），邮箱和密码的登录页不变。
 
@@ -106,3 +111,7 @@ python3 tests/check_character_expansion.py
 ![角色页](docs/previews/characters_wenxu.png)
 
 ![主页](docs/previews/home_wenxu.png)
+
+![祁澈角色页](docs/previews/characters_qiche.png)
+
+![祁澈主页](docs/previews/home_qiche.png)

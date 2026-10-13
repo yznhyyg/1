@@ -1,6 +1,7 @@
 extends Control
 
 const RatingSystem = preload("res://rating_system.gd")
+const Partners = preload("res://partner_system.gd")
 
 const UI = preload("res://ui/rhythm_ui.gd")
 
@@ -17,6 +18,7 @@ var rating_increase := 0.0
 var upload_status: Label
 var score_request: HTTPRequest
 var request_operation := ""
+var reward_label: Label
 
 func _ready() -> void:
 	$Background.hide()
@@ -60,6 +62,14 @@ func _ready() -> void:
 	rating_before = RatingSystem.personal_rating(songs, cached)
 	RatingSystem.remember_best(cached, data)
 	get_tree().set_meta("song_scores", cached)
+	var rewards := Partners.grant_score_rewards(get_tree(), cached)
+	if not rewards.is_empty():
+		var names: PackedStringArray = []
+		for character in rewards:
+			names.append(str(character.get("name", character["id"])))
+		reward_label = UI.label(self, "新伙伴已获得 · %s\n可在主页「角色」中设为上场" % "、".join(names), Rect2(64, 1064, 592, 60), 18, Color("#E7B87D"))
+		reward_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		reward_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	rating_after = RatingSystem.personal_rating(songs, cached)
 	rating_increase = maxf(rating_after - rating_before, 0.0)
 	var constant := 0.0
