@@ -1,11 +1,14 @@
 extends Control
 
+const RatingSystem = preload("res://rating_system.gd")
+
 const UI = preload("res://ui/rhythm_ui.gd")
 
 const SupabaseConfig = preload("res://supabase_config.gd")
 
 var data: Dictionary = {}
 var rating := "D"
+var song_rating_label: Label
 var upload_status: Label
 var score_request: HTTPRequest
 var request_operation := ""
@@ -43,7 +46,25 @@ func _ready() -> void:
 	UI.primary($Continue)
 	$Continue.grab_focus()
 	$Continue.pressed.connect(_continue)
+	# Check the previous cloud record before updating this session's best score.
 	_check_cloud_best_score()
+	var cached = get_tree().get_meta("song_scores", {})
+	if not cached is Dictionary:
+		cached = {}
+	RatingSystem.remember_best(cached, data)
+	get_tree().set_meta("song_scores", cached)
+	var songs := RatingSystem.load_catalog()
+	var constant := 0.0
+	for song in songs:
+		if str(song.get("folder", "")).get_file() == str(data.get("song_id", "")):
+			constant = RatingSystem.constant_for(song)
+			break
+	var summary := "定数待设置 · 本曲暂不计入 Rating"
+	if constant > 0.0:
+		summary = "LV %.1f  ·  本次 RATING %.3f" % [constant, RatingSystem.song_rating(constant, int(data.get("score", 0)))]
+	summary += "\n个人 RATING %.3f" % RatingSystem.personal_rating(songs, cached)
+	song_rating_label = UI.label(self, summary, Rect2(64, 816, 592, 100), 20, UI.CYAN)
+	song_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept") and not $Continue.disabled:
@@ -127,36 +148,9 @@ func _on_score_request_completed(result: int, response_code: int, _headers: Pack
 		return
 
 func _finish_upload(message: String) -> void:
-	if message == "成绩已上传":
-		var cached = get_tree().get_meta("song_scores", {})
-		if not cached is Dictionary:
-			cached = {}
-		cached[str(data.get("song_id", ""))] = {
-			"song_id": str(data.get("song_id", "")),
-			"best_score": int(data.get("score", 0)),
-			"grade": rating,
-			"max_combo": int(data.get("max_combo", 0)),
-			"perfect_count": int(data.get("perfect", 0)),
-			"great_count": int(data.get("great", 0)),
-			"good_count": int(data.get("good", 0)),
-			"miss_count": int(data.get("miss", 0))
-		}
-		get_tree().set_meta("song_scores", cached)
 	upload_status.text = message
 	$Continue.disabled = false
 	$Continue.grab_focus()
 
 func _rating_for_score(value: int) -> String:
-	if value >= 998000: return "SSS+"
-	if value >= 995000: return "SSS"
-	if value >= 990000: return "SS+"
-	if value >= 985000: return "SS"
-	if value >= 980000: return "S+"
-	if value >= 970000: return "S"
-	if value >= 950000: return "A+"
-	if value >= 930000: return "A"
-	if value >= 900000: return "B+"
-	if value >= 850000: return "B"
-	if value >= 800000: return "C+"
-	if value >= 700000: return "C"
-	return "D"
+	return RatingSystem.grade_for(value)

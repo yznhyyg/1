@@ -1,6 +1,10 @@
 extends Control
 
+const RatingSystem = preload("res://rating_system.gd")
+
 const UI = preload("res://ui/rhythm_ui.gd")
+
+var personal_rating_label: Label
 
 func _ready() -> void:
 	UI.setup(self)
@@ -12,6 +16,15 @@ func _ready() -> void:
 	UI.label(self, "准备好下一场演奏了吗？", Rect2(88, 544, 544, 44), 25)
 	UI.label(self, "D  /  F  /  J  /  K     ·     四轨节奏", Rect2(88, 602, 544, 35), 19, UI.MUTED)
 	UI.label(self, "让每一个音符，都成为你的高光。", Rect2(56, 1090, 608, 40), 19, UI.MUTED)
+	var songs := RatingSystem.load_catalog()
+	get_tree().set_meta("song_catalog", songs)
+	var scores = get_tree().get_meta("song_scores", {})
+	if not scores is Dictionary:
+		scores = {}
+	UI.card(self, Rect2(56, 808, 608, 218))
+	UI.label(self, "PERSONAL RATING / 个人实力", Rect2(88, 836, 544, 35), 18, UI.CYAN)
+	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(88, 878, 544, 70), 48)
+	UI.label(self, "BEST 20 · 取最高 20 曲，不足补零", Rect2(88, 970, 544, 30), 18, UI.MUTED)
 	UI.reveal(self)
 	var title := Label.new()
 	title.text = "RHYTHM\nGAME"

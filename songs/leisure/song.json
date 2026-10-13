@@ -1,5 +1,6 @@
 {
   "title": "leisure",
+  "constant": null,
   "chart": "chart.json",
   "music": "music.ogg",
   "artwork": "artwork.png",
@@ -12,5 +13,5 @@
   "count_in": {
 	"bpm": 240.0,
 	"beats": 4
-  },
+  }
 }

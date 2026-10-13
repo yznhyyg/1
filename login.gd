@@ -1,5 +1,7 @@
 extends Control
 
+const RatingSystem = preload("res://rating_system.gd")
+
 const UI = preload("res://ui/rhythm_ui.gd")
 
 const SupabaseConfig = preload("res://supabase_config.gd")
@@ -230,21 +232,7 @@ func _start_main_menu() -> void:
 	get_tree().change_scene_to_file("res://main_menu.tscn")
 
 func _load_local_song_catalog() -> void:
-	var songs: Array[Dictionary] = []
-	var directory := DirAccess.open("res://songs")
-	if directory == null:
-		get_tree().set_meta("song_catalog", songs)
-		return
-	for folder in directory.get_directories():
-		var path := "res://songs/" + folder
-		var file := FileAccess.open(path + "/song.json", FileAccess.READ)
-		if file == null:
-			continue
-		var song = JSON.parse_string(file.get_as_text())
-		if song is Dictionary:
-			song["folder"] = path
-			songs.append(song)
-	get_tree().set_meta("song_catalog", songs)
+	get_tree().set_meta("song_catalog", RatingSystem.load_catalog())
 
 func _try_restore_session() -> void:
 	if not FileAccess.file_exists(SESSION_FILE):

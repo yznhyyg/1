@@ -1,9 +1,13 @@
 extends Control
 
+const RatingSystem = preload("res://rating_system.gd")
+
 const UI = preload("res://ui/rhythm_ui.gd")
 
 var songs: Array[Dictionary] = []
 var selected_index := 0
+var level_label: Label
+var track_rating_label: Label
 var title_label: Label
 var artwork: TextureRect
 var best_score_label: Label
@@ -60,13 +64,17 @@ func _ready() -> void:
 
 	title_label = Label.new()
 	title_label.position = Vector2(56, 151)
-	title_label.size = Vector2(608, 47)
+	title_label.size = Vector2(430, 47)
 	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title_label.add_theme_color_override("font_color", Color("#F5F7FC"))
 	title_label.add_theme_font_size_override("font_size", 30)
 	add_child(title_label)
 
+	level_label = UI.label(self, "LV —", Rect2(504, 151, 160, 47), 24, UI.CYAN)
+	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	track_rating_label = UI.label(self, "RATING 0.000", Rect2(438, 648, 226, 26), 17, UI.ACCENT)
+	track_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var now_playing := Label.new()
 	now_playing.text = "TRACK PREVIEW / 曲目试听"
 	now_playing.position = Vector2(56, 190)
@@ -181,33 +189,16 @@ func _process(_delta: float) -> void:
 			_loop_preview()
 
 func _load_songs() -> void:
-	var cached_catalog = get_tree().get_meta("song_catalog", [])
-	if cached_catalog is Array:
-		songs.assign(cached_catalog)
-	if songs.is_empty():
-		_load_songs_from_disk()
+	# Read current constants so changing song.json takes effect without logging in again.
+	songs = RatingSystem.load_catalog()
+	get_tree().set_meta("song_catalog", songs)
 	_create_song_buttons()
-
-func _load_songs_from_disk() -> void:
-	# 兼容直接用 F6 运行选曲场景的情况；正常 F5 流程使用登录页缓存。
-	var directory := DirAccess.open("res://songs")
-	if directory == null:
-		return
-	for folder in directory.get_directories():
-		var path := "res://songs/" + folder
-		var file := FileAccess.open(path + "/song.json", FileAccess.READ)
-		if file == null:
-			continue
-		var data = JSON.parse_string(file.get_as_text())
-		if data is Dictionary:
-			data["folder"] = path
-			songs.append(data)
 
 func _create_song_buttons() -> void:
 	song_buttons.clear()
 	for index in songs.size():
 		var button := Button.new()
-		button.text = "  %02d     %s" % [index + 1, str(songs[index].get("title", songs[index].get("folder", "未命名歌曲")))]
+		button.text = "  %02d     %s     ·     %s" % [index + 1, str(songs[index].get("title", "未命名歌曲")), RatingSystem.level_text(songs[index])]
 		button.custom_minimum_size = Vector2(656, 64)
 		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -234,6 +225,7 @@ func _select_song(index: int) -> void:
 	var song: Dictionary = songs[index]
 	_start_preview(song)
 	title_label.text = str(song.get("title", "未命名歌曲"))
+	level_label.text = RatingSystem.level_text(song)
 	_update_best_score_display()
 	var artwork_path := str(song["folder"]) + "/" + str(song.get("artwork", "artwork.png"))
 	if ResourceLoader.exists(artwork_path):
@@ -259,6 +251,10 @@ func _update_best_score_display() -> void:
 		return
 	var song_folder := str(songs[selected_index].get("folder", ""))
 	var song_id := song_folder.get_file()
+	var constant := RatingSystem.constant_for(songs[selected_index])
+	var record_for_rating = best_scores.get(song_id, {})
+	var best_score := int(record_for_rating.get("best_score", 0)) if record_for_rating is Dictionary else 0
+	track_rating_label.text = "RATING %.3f" % RatingSystem.song_rating(constant, best_score) if constant > 0.0 else "定数待设置"
 	if not best_scores.has(song_id):
 		best_score_label.text = "BEST   —          ·          最高分   0000000"
 		return
