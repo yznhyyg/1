@@ -17,6 +17,8 @@ func run() -> void:
 	var catalog := Partners.load_catalog()
 	check(not catalog.is_empty(), "character catalog loads")
 	check(Partners.get_character("wenxu").get("name") == "闻序", "starter defined by catalog")
+	check(Partners.background_texture({}).resource_path == Partners.DEFAULT_BACKGROUND, "missing role background uses default")
+	check(Partners.background_texture({"background": "res://does_not_exist.png"}).resource_path == Partners.DEFAULT_BACKGROUND, "invalid role background uses default")
 	var temporary_catalog := OS.get_user_data_dir().path_join("rg_catalog_test_" + str(OS.get_process_id()) + ".json")
 	var catalog_file := FileAccess.open(temporary_catalog, FileAccess.WRITE)
 	catalog_file.store_string(JSON.stringify([{"id": " sample "}, {"id": "sample"}, {"id": ""}, 42]))
@@ -75,6 +77,7 @@ func run() -> void:
 	current_scene = home
 	await process_frame
 	var active := Partners.active_character(self)
+	check(home.character_background.texture.resource_path == str(active.get("background", Partners.DEFAULT_BACKGROUND)), "home background follows equipped character")
 	check(home.partner_portrait.texture.resource_path == str(active["portrait"]), "home displays selected character asset")
 	check(home.partner_button.tooltip_text.begins_with(str(active["name"])), "home click target identifies active partner")
 	check(home.partner_button.get_rect().position.x > home.start_button.get_rect().end.x, "character click target does not cover Enter")
@@ -90,14 +93,21 @@ func run() -> void:
 	page._select("wenxu")
 	check(page.name_label.text == "闻序", "detail selection updates name")
 	if not extra.is_empty():
+		check(Partners.active_character(self)["id"] == "fixture_partner", "browsing does not change equipped role")
 		check(not page.action_button.disabled, "another owned partner can be equipped")
 		page.action_button.pressed.emit()
 		check(get_meta("partner_profile")["active"] == "wenxu", "UI button changes active character")
 		check(page.action_button.disabled, "UI updates after successful selection")
+		var active_badges := 0
+		for button in page.character_buttons:
+			if button.text.contains("当前上场"):
+				active_badges += 1
+		check(active_badges == 1, "only one character is equipped at once")
 	page._back()
 	await process_frame
 	await process_frame
 	check(current_scene != null and current_scene.scene_file_path == "res://main_menu.tscn", "return to home works")
+	check(current_scene.character_background.texture.resource_path == str(Partners.get_character("wenxu")["background"]), "return updates background after equipping another role")
 	check(current_scene.partner_button.tooltip_text.begins_with("闻序"), "home reflects selected character after return")
 	current_scene.characters_button.pressed.emit()
 	await process_frame

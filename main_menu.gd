@@ -6,22 +6,24 @@ const UI = preload("res://ui/rhythm_ui.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
+var character_background: TextureRect
 var start_button: Button
 var partner_button: Button
 var characters_button: Button
 
 func _ready() -> void:
 	UI.setup(self, true)
-	var background := TextureRect.new()
-	background.name = "HomeBackground"
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.texture = load("res://assets/backgrounds/home_midnight_atrium.png")
-	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(background)
-	if background.texture != null:
+	var character := PartnerSystem.active_character(get_tree())
+	character_background = TextureRect.new()
+	character_background.name = "HomeBackground"
+	character_background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	character_background.texture = PartnerSystem.background_texture(character)
+	character_background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	character_background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	character_background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	character_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(character_background)
+	if character_background.texture != null:
 		# The opaque picture replaces the procedural backdrop; avoid drawing both.
 		get_child(0).hide()
 	var shade := ColorRect.new()
@@ -33,7 +35,6 @@ func _ready() -> void:
 	# Actual ownership is granted only by the successful login flow.
 	partner_portrait = TextureRect.new()
 	partner_portrait.name = "PartnerPortrait"
-	var character := PartnerSystem.active_character(get_tree())
 	partner_portrait.texture = PartnerSystem.portrait_texture(character)
 	partner_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	partner_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

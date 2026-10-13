@@ -10,6 +10,7 @@
     "unlock": {
       "type": "login",
       "description": "登录即可获得"
-    }
+    },
+    "background": "res://assets/backgrounds/home_midnight_atrium.png"
   }
 ]

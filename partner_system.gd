@@ -4,6 +4,7 @@ const CATALOG_PATH := "res://characters/catalog.json"
 const STARTER_ID := "wenxu"
 const STARTER_NAME := "闻序"
 const STARTER_PORTRAIT := "res://assets/characters/wenxu.png"
+const DEFAULT_BACKGROUND := "res://assets/backgrounds/home_midnight_atrium.png"
 
 static func load_catalog(path: String = CATALOG_PATH) -> Array[Dictionary]:
 	var characters: Array[Dictionary] = []
@@ -33,12 +34,18 @@ static func get_character(id: String) -> Dictionary:
 			return character
 	return {}
 
-static func portrait_texture(character: Dictionary) -> Texture2D:
-	var path := str(character.get("portrait", ""))
+static func _texture_from_path(path: String) -> Texture2D:
 	if not path.begins_with("res://") or not ResourceLoader.exists(path):
 		return null
 	var resource = load(path)
 	return resource if resource is Texture2D else null
+
+static func portrait_texture(character: Dictionary) -> Texture2D:
+	return _texture_from_path(str(character.get("portrait", "")))
+
+static func background_texture(character: Dictionary) -> Texture2D:
+	var texture := _texture_from_path(str(character.get("background", "")))
+	return texture if texture != null else _texture_from_path(DEFAULT_BACKGROUND)
 
 static func user_id(tree: SceneTree) -> String:
 	var session = tree.get_meta("supabase_session", {})
