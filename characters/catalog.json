@@ -19,7 +19,7 @@
 	"title": "暮色中的听音者",
 	"description": "温和洒脱的唱片收藏家，喜欢在日落时分戴上耳机。他相信再细微的节奏，也值得被认真听见。",
 	"quote": "慢慢听，好风景总在下一拍。",
-	"portrait": "res://assets/characters/qiche.png",
+	"portrait": "res://assets/characters/qiche_hd.png",
 	"background": "res://assets/backgrounds/home_qiche_dusk.png",
 	"accent": "#E7B87D",
 	"unlock": {

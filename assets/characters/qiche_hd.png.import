@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmr1iekxakrx3"
-path="res://.godot/imported/qiche.png-fe8560722430396c2f84f6b3ae8d6a1d.ctex"
+uid="uid://buqu6dughwvos"
+path="res://.godot/imported/qiche_hd.png-8ad2049504da7e26770d61fc2ea6a514.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/qiche.png"
-dest_files=["res://.godot/imported/qiche.png-fe8560722430396c2f84f6b3ae8d6a1d.ctex"]
+source_file="res://assets/characters/qiche_hd.png"
+dest_files=["res://.godot/imported/qiche_hd.png-8ad2049504da7e26770d61fc2ea6a514.ctex"]
 
 [params]
 
