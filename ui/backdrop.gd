@@ -1,10 +1,18 @@
 extends Control
 
+var minimal := false
+
 func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("#090F1D"))
+	if minimal:
+		# Subtle light behind the partner, with no grid or rhythm bars on the home page.
+		var factor := size / Vector2(720, 1280)
+		for layer in range(32):
+			draw_circle(Vector2(540, 620) * factor, (540.0 - layer * 12.0) * factor.x, Color(0.25, 0.33, 0.49, 0.012))
+		return
 	# A quiet perspective grid and rhythm bars, drawn at any viewport size.
 	var scale_factor := size / Vector2(720, 1280)
 	for index in range(12):

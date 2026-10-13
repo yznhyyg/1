@@ -1,6 +1,7 @@
 extends Control
 
 const RatingSystem = preload("res://rating_system.gd")
+const PartnerSystem = preload("res://partner_system.gd")
 
 const UI = preload("res://ui/rhythm_ui.gd")
 
@@ -228,6 +229,7 @@ func _finish_cloud_scores_load(result: int, response_code: int, response) -> voi
 	_start_main_menu()
 
 func _start_main_menu() -> void:
+	PartnerSystem.grant_starter(get_tree())
 	_load_local_song_catalog()
 	get_tree().change_scene_to_file("res://main_menu.tscn")
 

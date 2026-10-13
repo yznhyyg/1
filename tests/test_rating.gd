@@ -123,5 +123,7 @@ func run() -> void:
 	check(home.personal_rating_label.text == "%.3f" % expected_home, "home recalculates from best scores and current constants")
 	home.queue_free()
 	await process_frame
+	# Give the audio thread time to release stopped preview streams before exit.
+	await create_timer(0.1).timeout
 	print("Rating tests: ", checks, " checks, ", failures, " failures")
 	quit(1 if failures > 0 else 0)

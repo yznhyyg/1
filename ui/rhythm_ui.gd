@@ -49,9 +49,10 @@ static func make_theme() -> Theme:
 	theme.set_stylebox("grabber_area_highlight", "HSlider", box(CYAN, CYAN, 3))
 	return theme
 
-static func setup(root: Control) -> void:
+static func setup(root: Control, minimal_background: bool = false) -> void:
 	root.theme = make_theme()
 	var background := Backdrop.new()
+	background.minimal = minimal_background
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(background)
