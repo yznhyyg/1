@@ -86,13 +86,17 @@ func run() -> void:
 		var constant := RatingSystem.constant_for(song)
 		var expected := "RATING %.3f" % RatingSystem.song_rating(constant, 995000) if constant > 0.0 else "定数待设置"
 		check(selection.track_rating_label.text == expected, "best rating on selection page")
+	# Match normal navigation: stop preview playback before leaving selection.
+	selection.preview_player.stop()
+	if selection.preview_tween != null:
+		selection.preview_tween.kill()
 	selection.queue_free()
 	await process_frame
 	var home = load("res://main_menu.tscn").instantiate()
 	root.add_child(home)
 	await process_frame
 	var expected_home := RatingSystem.personal_rating(RatingSystem.load_catalog(), get_meta("song_scores"))
-	check(home.personal_rating_label.text == "%.3f" % expected_home, "home recalculates from best scores and current constants")
+	check(home.personal_rating_label.text == "RATING %.3f" % expected_home, "home recalculates from best scores and current constants")
 	home.queue_free()
 	await process_frame
 	print("Rating tests: ", checks, " checks, ", failures, " failures")

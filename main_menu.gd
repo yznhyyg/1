@@ -21,10 +21,9 @@ func _ready() -> void:
 	var scores = get_tree().get_meta("song_scores", {})
 	if not scores is Dictionary:
 		scores = {}
-	UI.card(self, Rect2(56, 808, 608, 218))
-	UI.label(self, "PERSONAL RATING / 个人实力", Rect2(88, 836, 544, 35), 18, UI.CYAN)
-	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(88, 878, 544, 70), 48)
-	UI.label(self, "BEST 20 · 取最高 20 曲，不足补零", Rect2(88, 970, 544, 30), 18, UI.MUTED)
+	UI.card(self, Rect2(56, 808, 304, 109))
+	personal_rating_label = UI.label(self, "RATING %.3f" % RatingSystem.personal_rating(songs, scores), Rect2(80, 827, 256, 70), 30, UI.CYAN)
+	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	UI.reveal(self)
 	var title := Label.new()
 	title.text = "RHYTHM\nGAME"
