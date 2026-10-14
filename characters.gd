@@ -22,7 +22,16 @@ var character_buttons: Array[Button] = []
 func _ready() -> void:
 	UI.setup(self, true)
 	characters = Partners.load_catalog()
-	Brand.title(self, "Thetale", Rect2(44, 26, 300, 54), 34)
+	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
+	if logo_texture != null:
+		var logo := Sprite2D.new()
+		logo.texture = logo_texture
+		logo.position = Vector2(150, 51)
+		logo.scale = Vector2.ONE * (210.0 / float(logo_texture.get_width()))
+		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		add_child(logo)
+	else:
+		Brand.title(self, "Thetale", Rect2(44, 26, 300, 54), 34)
 	UI.label(self, "CHARACTERS / 角色", Rect2(44, 84, 620, 30), 16, UI.CYAN)
 	var back := Button.new()
 	back.text = "← 返回"
