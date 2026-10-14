@@ -94,7 +94,12 @@ func _ready() -> void:
 	start_button.text = "ENTER"
 	start_button.position = Vector2(44, 618)
 	start_button.size = Vector2(224, 64)
-	UI.primary(start_button)
+	start_button.add_theme_stylebox_override("normal", UI.box(Color("#14203A"), Color("#B6A6FF"), 32))
+	start_button.add_theme_stylebox_override("hover", UI.box(Color("#243153"), Color("#D0C6FF"), 32))
+	start_button.add_theme_stylebox_override("pressed", UI.box(Color("#0D162B"), Color("#9C87FF"), 32))
+	start_button.add_theme_stylebox_override("focus", UI.box(Color("#14203A"), Color("#66E7DA"), 32))
+	start_button.add_theme_color_override("font_color", Color("#F4F1FF"))
+	start_button.add_theme_color_override("font_hover_color", Color.WHITE)
 	start_button.add_theme_font_size_override("font_size", 22)
 	start_button.pressed.connect(_start_game)
 	add_child(start_button)
