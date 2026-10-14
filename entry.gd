@@ -25,6 +25,13 @@ func _ready() -> void:
 	add_child(background)
 	move_child(background, 0)
 
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.015, 0.025, 0.07, 0.46)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
+	move_child(shade, 1)
+
 	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
 	if logo_texture != null:
 		var logo := Sprite2D.new()
@@ -39,7 +46,7 @@ func _ready() -> void:
 
 	login_button = Button.new()
 	login_button.text = "登录"
-	login_button.position = Vector2(88, 990)
+	login_button.position = Vector2(88, 790)
 	login_button.size = Vector2(544, 72)
 	login_button.z_index = 10
 	login_button.add_theme_font_size_override("font_size", 24)

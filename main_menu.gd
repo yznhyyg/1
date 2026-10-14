@@ -29,7 +29,7 @@ func _ready() -> void:
 		get_child(0).hide()
 	var shade := ColorRect.new()
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.color = Color(0.035, 0.059, 0.114, 0.22)
+	shade.color = Color(0.035, 0.059, 0.114, 0.30)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	# The portrait is also visible when previewing this scene in the editor.
@@ -91,7 +91,7 @@ func _ready() -> void:
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 	start_button = Button.new()
-	start_button.text = "ENTER"
+	start_button.text = "ENTER  →"
 	start_button.position = Vector2(44, 618)
 	start_button.size = Vector2(224, 64)
 	UI.primary(start_button)
@@ -108,7 +108,7 @@ func _ready() -> void:
 	characters_button.pressed.connect(_open_characters)
 	add_child(characters_button)
 
-	var tip := UI.label(self, "Tips ： ~", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
+	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
 

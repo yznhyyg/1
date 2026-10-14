@@ -11,4 +11,4 @@ func _draw() -> void:
 	# The artwork uses the same portrait ratio as the game's 720x1280 viewport.
 	draw_texture_rect(BACKGROUND_TEXTURE, Rect2(Vector2.ZERO, size), false)
 	# Keep form fields and labels readable without hiding the artwork.
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.10, 0.18))
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.10, 0.34))
