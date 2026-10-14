@@ -123,7 +123,7 @@ func _ready() -> void:
 	characters_button.pressed.connect(_open_characters)
 	add_child(characters_button)
 
-	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
+	var tip := UI.label(self, "Tips ： ~", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
 
