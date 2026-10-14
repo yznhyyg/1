@@ -102,7 +102,7 @@ func _ready() -> void:
 		rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	personal_rating_label = RatingDigits.new()
 	personal_rating_label.position = Vector2(60, 516)
-	personal_rating_label.size = Vector2(212, 54)
+	personal_rating_label.size = Vector2(212, 64)
 	personal_rating_label.text = "%.3f" % RatingSystem.personal_rating(songs, scores)
 	personal_rating_label.add_theme_font_size_override("font_size", 40)
 	add_child(personal_rating_label)
