@@ -3,6 +3,8 @@ extends Control
 ## A quiet, animated backdrop for the entry/login screen.
 ## It is drawn procedurally so it stays sharp at every window size.
 
+const BACKGROUND_TEXTURE = preload("res://assets/backgrounds/entry_atrium.png")
+
 var elapsed := 0.0
 var _base_size := Vector2(720.0, 1280.0)
 
@@ -19,7 +21,11 @@ func _draw() -> void:
 	var scale_factor := size / _base_size
 	var pulse := (sin(elapsed * 0.55) + 1.0) * 0.5
 
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#070C19"))
+	# Use the illustrated entry artwork as the main layer. Its portrait ratio
+	# matches the game's 720x1280 viewport, so it fills the screen cleanly.
+	draw_texture_rect(BACKGROUND_TEXTURE, Rect2(Vector2.ZERO, size), false)
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.10, 0.16))
+	return
 
 	# Two broad pools of colour give the page depth without competing with the form.
 	_draw_glow(Vector2(555.0, 265.0) * scale_factor, 430.0 * scale_factor.x, Color("#5C4AC8"), 0.15 + pulse * 0.025)
