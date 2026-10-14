@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="rg"
+config/name="Thetale"
 run/main_scene="res://login.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/max_fps=120

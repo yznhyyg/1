@@ -4,6 +4,7 @@ const RatingSystem = preload("res://rating_system.gd")
 const PartnerSystem = preload("res://partner_system.gd")
 
 const UI = preload("res://ui/rhythm_ui.gd")
+const Brand = preload("res://ui/brand.gd")
 const EntryBackdrop = preload("res://ui/entry_backdrop.gd")
 
 const SupabaseConfig = preload("res://supabase_config.gd")
@@ -32,19 +33,14 @@ func _ready() -> void:
 	move_child(entry_backdrop, 0)
 
 	UI.card(self, Rect2(56, 330, 608, 520))
-	UI.label(self, "RG  /  RHYTHM GAME", Rect2(56, 66, 608, 40), 17, UI.CYAN)
+	UI.label(self, "THETALE  /  RHYTHM GAME", Rect2(56, 66, 608, 40), 17, UI.CYAN)
 	UI.label(self, "每一次敲击，都与节奏共鸣。", Rect2(56, 254, 608, 40), 22, UI.MUTED)
 	UI.label(self, "欢迎回来", Rect2(88, 356, 544, 45), 28)
 	UI.label(self, "邮箱", Rect2(88, 428, 544, 30), 18, UI.MUTED)
 	UI.label(self, "密码", Rect2(88, 544, 544, 30), 18, UI.MUTED)
 	UI.reveal(self)
-	var title := Label.new()
-	title.text = "进入节奏"
-	title.position = Vector2(56, 155)
-	title.size = Vector2(608, 80)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	title.add_theme_font_size_override("font_size", 64)
-	add_child(title)
+	Brand.title(self, "Thetale", Rect2(56, 138, 608, 92), 70)
+	Brand.accent_line(self, Rect2(294, 232, 132, 3))
 
 	email_input = LineEdit.new()
 	email_input.placeholder_text = "邮箱"

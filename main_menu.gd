@@ -3,6 +3,7 @@ extends Control
 const RatingSystem = preload("res://rating_system.gd")
 const PartnerSystem = preload("res://partner_system.gd")
 const UI = preload("res://ui/rhythm_ui.gd")
+const Brand = preload("res://ui/brand.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -66,7 +67,8 @@ func _ready() -> void:
 	partner_button.pressed.connect(_open_characters)
 	add_child(partner_button)
 
-	UI.label(self, "RHYTHM\nGAME", Rect2(44, 218, 244, 156), 44)
+	Brand.title(self, "Thetale", Rect2(44, 218, 244, 82), 48)
+	Brand.accent_line(self, Rect2(100, 310, 132, 3))
 	var songs := RatingSystem.load_catalog()
 	get_tree().set_meta("song_catalog", songs)
 	var scores = get_tree().get_meta("song_scores", {})
