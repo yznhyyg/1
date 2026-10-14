@@ -1,6 +1,7 @@
 extends Control
 
 const UI = preload("res://ui/rhythm_ui.gd")
+const Brand = preload("res://ui/brand.gd")
 const SESSION_FILE := "user://supabase_session.json"
 
 var login_button: Button
@@ -24,15 +25,19 @@ func _ready() -> void:
 	add_child(background)
 	move_child(background, 0)
 
-	var logo := TextureRect.new()
-	logo.texture = preload("res://assets/branding/thetale_logo_a.png")
-	logo.position = Vector2(52, 170)
-	logo.size = Vector2(616, 205)
-	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(logo)
+	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
+	if logo_texture != null:
+		var logo := TextureRect.new()
+		logo.texture = logo_texture
+		logo.position = Vector2(52, 170)
+		logo.size = Vector2(616, 205)
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(logo)
+	else:
+		Brand.title(self, "Thetale", Rect2(52, 170, 616, 100), 68)
 
 	login_button = Button.new()
 	login_button.text = "登录"

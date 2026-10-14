@@ -1,6 +1,7 @@
 extends Control
 
 const UI = preload("res://ui/rhythm_ui.gd")
+const Brand = preload("res://ui/brand.gd")
 const Partners = preload("res://partner_system.gd")
 
 var characters: Array[Dictionary] = []
@@ -21,7 +22,8 @@ var character_buttons: Array[Button] = []
 func _ready() -> void:
 	UI.setup(self, true)
 	characters = Partners.load_catalog()
-	UI.label(self, "PARTNERS / 角色", Rect2(44, 36, 620, 30), 16, UI.CYAN)
+	Brand.title(self, "Thetale", Rect2(44, 26, 300, 54), 34)
+	UI.label(self, "CHARACTERS / 角色", Rect2(44, 84, 620, 30), 16, UI.CYAN)
 	var back := Button.new()
 	back.text = "← 返回"
 	back.position = Vector2(32, 84)
