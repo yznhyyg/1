@@ -1,6 +1,6 @@
 {
   "title": "leisure",
-  "constant": null,
+  "constant": 8.5,
   "chart": "chart.json",
   "music": "music.ogg",
   "artwork": "artwork.png",
