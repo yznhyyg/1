@@ -33,15 +33,15 @@ func _draw() -> void:
 	var value := text
 	if value.is_empty():
 		return
-	var glyph_count := value.length()
+	var glyph_count: int = value.length()
 	var gap := 7.0
 	var glyph_width := 29.0
-	var total_width := glyph_count * glyph_width + max(glyph_count - 1, 0) * gap
-	var scale_factor := minf(1.0, minf(size.x / maxf(total_width, 1.0), size.y / 58.0))
+	var total_width: float = float(glyph_count) * glyph_width + float(maxi(glyph_count - 1, 0)) * gap
+	var scale_factor: float = minf(1.0, minf(size.x / maxf(total_width, 1.0), size.y / 58.0))
 	var width := glyph_width * scale_factor
 	var height := 54.0 * scale_factor
 	var spacing := gap * scale_factor
-	var x := (size.x - (glyph_count * width + max(glyph_count - 1, 0) * spacing)) * 0.5
+	var x: float = (size.x - (float(glyph_count) * width + float(maxi(glyph_count - 1, 0)) * spacing)) * 0.5
 	var y := (size.y - height) * 0.5
 
 	for character in value:
