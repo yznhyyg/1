@@ -83,10 +83,23 @@ func _ready() -> void:
 	var scores = get_tree().get_meta("song_scores", {})
 	if not scores is Dictionary:
 		scores = {}
-	UI.card(self, Rect2(44, 460, 224, 110))
-	var rating_heading := UI.label(self, "RATING", Rect2(60, 476, 192, 25), 17, UI.CYAN)
-	rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(60, 508, 192, 54), 38, Color("#FF75BC"))
+	var rating_card := Panel.new()
+	rating_card.position = Vector2(44, 460)
+	rating_card.size = Vector2(244, 122)
+	rating_card.add_theme_stylebox_override("panel", UI.box(Color("#101A30"), Color("#7767D7"), 24))
+	add_child(rating_card)
+	var rating_texture := load("res://assets/branding/thetale_rating_b.png") as Texture2D
+	if rating_texture != null:
+		var rating_logo := Sprite2D.new()
+		rating_logo.texture = rating_texture
+		rating_logo.position = Vector2(122, 27)
+		rating_logo.scale = Vector2.ONE * (126.0 / float(rating_texture.get_width()))
+		rating_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		rating_card.add_child(rating_logo)
+	else:
+		var rating_heading := UI.label(rating_card, "RATING", Rect2(20, 10, 204, 28), 17, UI.CYAN)
+		rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(60, 516, 212, 54), 40, Color("#FF75BC"))
 	personal_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
