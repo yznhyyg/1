@@ -67,8 +67,17 @@ func _ready() -> void:
 	partner_button.pressed.connect(_open_characters)
 	add_child(partner_button)
 
-	Brand.title(self, "Thetale", Rect2(44, 218, 244, 82), 48)
-	Brand.accent_line(self, Rect2(100, 310, 132, 3))
+	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
+	if logo_texture != null:
+		var logo := Sprite2D.new()
+		logo.texture = logo_texture
+		logo.position = Vector2(166, 259)
+		logo.scale = Vector2.ONE * (244.0 / float(logo_texture.get_width()))
+		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		add_child(logo)
+	else:
+		Brand.title(self, "Thetale", Rect2(44, 218, 244, 82), 48)
+		Brand.accent_line(self, Rect2(100, 310, 132, 3))
 	var songs := RatingSystem.load_catalog()
 	get_tree().set_meta("song_catalog", songs)
 	var scores = get_tree().get_meta("song_scores", {})
@@ -82,7 +91,7 @@ func _ready() -> void:
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 	start_button = Button.new()
-	start_button.text = "ENTER"
+	start_button.text = "ENTER  →"
 	start_button.position = Vector2(44, 618)
 	start_button.size = Vector2(224, 64)
 	UI.primary(start_button)
@@ -99,7 +108,7 @@ func _ready() -> void:
 	characters_button.pressed.connect(_open_characters)
 	add_child(characters_button)
 
-	var tip := UI.label(self, "Tips ： ~", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
+	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
 
