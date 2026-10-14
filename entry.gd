@@ -39,7 +39,7 @@ func _ready() -> void:
 
 	login_button = Button.new()
 	login_button.text = "登录"
-	login_button.position = Vector2(88, 790)
+	login_button.position = Vector2(88, 990)
 	login_button.size = Vector2(544, 72)
 	login_button.z_index = 10
 	login_button.add_theme_font_size_override("font_size", 24)
