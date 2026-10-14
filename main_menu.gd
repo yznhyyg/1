@@ -111,6 +111,19 @@ func _ready() -> void:
 		start_button.add_child(enter_logo)
 	else:
 		start_button.text = "ENTER  →"
+	var enter_arrow := Label.new()
+	enter_arrow.text = "›"
+	enter_arrow.position = Vector2(180, 9)
+	enter_arrow.size = Vector2(30, 46)
+	enter_arrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	enter_arrow.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	enter_arrow.add_theme_font_size_override("font_size", 32)
+	enter_arrow.add_theme_color_override("font_color", Color("#C9BEFF"))
+	enter_arrow.add_theme_color_override("font_shadow_color", Color(0.40, 0.90, 0.85, 0.30))
+	enter_arrow.add_theme_constant_override("shadow_offset_x", 2)
+	enter_arrow.add_theme_constant_override("shadow_offset_y", 2)
+	enter_arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	start_button.add_child(enter_arrow)
 	start_button.pressed.connect(_start_game)
 	add_child(start_button)
 	start_button.grab_focus()
