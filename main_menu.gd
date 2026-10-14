@@ -29,7 +29,7 @@ func _ready() -> void:
 		get_child(0).hide()
 	var shade := ColorRect.new()
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.color = Color(0.035, 0.059, 0.114, 0.22)
+	shade.color = Color(0.035, 0.059, 0.114, 0.30)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	# The portrait is also visible when previewing this scene in the editor.
