@@ -4,6 +4,7 @@ const RatingSystem = preload("res://rating_system.gd")
 const PartnerSystem = preload("res://partner_system.gd")
 const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
+const RatingDigits = preload("res://ui/rating_digits.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -99,7 +100,12 @@ func _ready() -> void:
 	else:
 		var rating_heading := UI.label(rating_card, "RATING", Rect2(20, 10, 204, 28), 17, UI.CYAN)
 		rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	personal_rating_label = UI.label(self, "%.3f" % RatingSystem.personal_rating(songs, scores), Rect2(60, 516, 212, 54), 40, Color("#FF75BC"))
+	personal_rating_label = RatingDigits.new()
+	personal_rating_label.position = Vector2(60, 516)
+	personal_rating_label.size = Vector2(212, 54)
+	personal_rating_label.text = "%.3f" % RatingSystem.personal_rating(songs, scores)
+	personal_rating_label.add_theme_font_size_override("font_size", 40)
+	add_child(personal_rating_label)
 	personal_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
