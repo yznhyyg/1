@@ -4,6 +4,7 @@ const RatingSystem = preload("res://rating_system.gd")
 const PartnerSystem = preload("res://partner_system.gd")
 
 const UI = preload("res://ui/rhythm_ui.gd")
+const EntryBackdrop = preload("res://ui/entry_backdrop.gd")
 
 const SupabaseConfig = preload("res://supabase_config.gd")
 const SESSION_FILE := "user://supabase_session.json"
@@ -19,6 +20,16 @@ var bootstrap_access_token := ""
 
 func _ready() -> void:
 	UI.setup(self)
+	# The entry screen gets its own restrained backdrop: it keeps the rhythm-game
+	# identity while leaving the login card and text easy to read.
+	var default_backdrop := get_child(0)
+	if default_backdrop is Control:
+		default_backdrop.hide()
+	var entry_backdrop := EntryBackdrop.new()
+	entry_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	entry_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(entry_backdrop)
+	move_child(entry_backdrop, 0)
 
 	UI.card(self, Rect2(56, 330, 608, 520))
 	UI.label(self, "RG  /  RHYTHM GAME", Rect2(56, 66, 608, 40), 17, UI.CYAN)
