@@ -93,8 +93,8 @@ func _ready() -> void:
 	if rating_texture != null:
 		var rating_logo := Sprite2D.new()
 		rating_logo.texture = rating_texture
-		rating_logo.position = Vector2(122, 27)
-		rating_logo.scale = Vector2.ONE * (126.0 / float(rating_texture.get_width()))
+		rating_logo.position = Vector2(120, 26)
+		rating_logo.scale = Vector2.ONE * (160.0 / float(rating_texture.get_width()))
 		rating_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		rating_card.add_child(rating_logo)
 	else:
@@ -124,7 +124,7 @@ func _ready() -> void:
 	if enter_texture != null:
 		var enter_logo := Sprite2D.new()
 		enter_logo.texture = enter_texture
-		enter_logo.position = start_button.size * 0.5
+		enter_logo.position = Vector2(start_button.size.x * 0.5 + 3.0, start_button.size.y * 0.5)
 		enter_logo.scale = Vector2.ONE * (142.0 / float(enter_texture.get_width()))
 		enter_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		start_button.add_child(enter_logo)
