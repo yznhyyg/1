@@ -5,8 +5,8 @@ extends Label
 ## character is rendered from the matching atlas cell at runtime.
 
 const DIGIT_ATLAS = preload("res://assets/branding/thetale_numbers_c.png")
-const MAIN_COLOR := Color("#FF75BC")
-const EDGE_COLOR := Color(0.40, 0.90, 0.85, 0.30)
+const MAIN_COLOR := Color("#F4F5FF")
+const EDGE_COLOR := Color(0.62, 0.55, 1.0, 0.32)
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -23,22 +23,28 @@ func _draw() -> void:
 		return
 
 	var glyph_count: int = value.length()
-	var gap := 6.0
-	var glyph_width := 28.0
-	var glyph_height := 54.0
-	var total_width: float = float(glyph_count) * glyph_width + float(maxi(glyph_count - 1, 0)) * gap
+	var gap := 3.5
+	var glyph_width := 34.0
+	var decimal_width := 11.0
+	var glyph_height := 62.0
+	var total_width := 0.0
+	for character in value:
+		total_width += decimal_width if character == "." else glyph_width
+	if glyph_count > 1:
+		total_width += float(glyph_count - 1) * gap
 	var scale_factor: float = minf(1.0, minf(size.x / maxf(total_width, 1.0), size.y / glyph_height))
 	var width := glyph_width * scale_factor
 	var height := glyph_height * scale_factor
+	var dot_width := decimal_width * scale_factor
 	var spacing := gap * scale_factor
-	var x: float = (size.x - (float(glyph_count) * width + float(maxi(glyph_count - 1, 0)) * spacing)) * 0.5
+	var x: float = (size.x - (total_width * scale_factor)) * 0.5
 	var y: float = (size.y - height) * 0.5
 	var cell_width := float(DIGIT_ATLAS.get_width()) / 10.0
 
 	for character in value:
 		if character == ".":
-			draw_circle(Vector2(x + width * 0.5, y + height - 4.0 * scale_factor), 3.0 * scale_factor, MAIN_COLOR)
-			x += width * 0.48 + spacing
+			draw_circle(Vector2(x + dot_width * 0.5, y + height - 5.0 * scale_factor), 3.0 * scale_factor, MAIN_COLOR)
+			x += dot_width + spacing
 			continue
 		if character >= "0" and character <= "9":
 			var index := int(character)
