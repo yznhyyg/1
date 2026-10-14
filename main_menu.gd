@@ -91,7 +91,7 @@ func _ready() -> void:
 	personal_rating_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 	start_button = Button.new()
-	start_button.text = "ENTER"
+	start_button.text = ""
 	start_button.position = Vector2(44, 618)
 	start_button.size = Vector2(224, 64)
 	start_button.add_theme_stylebox_override("normal", UI.box(Color("#14203A"), Color("#B6A6FF"), 32))
@@ -101,6 +101,16 @@ func _ready() -> void:
 	start_button.add_theme_color_override("font_color", Color("#F4F1FF"))
 	start_button.add_theme_color_override("font_hover_color", Color.WHITE)
 	start_button.add_theme_font_size_override("font_size", 22)
+	var enter_texture := load("res://assets/branding/thetale_enter_a.png") as Texture2D
+	if enter_texture != null:
+		var enter_logo := Sprite2D.new()
+		enter_logo.texture = enter_texture
+		enter_logo.position = start_button.size * 0.5
+		enter_logo.scale = Vector2.ONE * (142.0 / float(enter_texture.get_width()))
+		enter_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		start_button.add_child(enter_logo)
+	else:
+		start_button.text = "ENTER  →"
 	start_button.pressed.connect(_start_game)
 	add_child(start_button)
 	start_button.grab_focus()
@@ -113,7 +123,7 @@ func _ready() -> void:
 	characters_button.pressed.connect(_open_characters)
 	add_child(characters_button)
 
-	var tip := UI.label(self, "Tips ： ~", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
+	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
 
