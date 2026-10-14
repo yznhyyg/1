@@ -27,14 +27,12 @@ func _ready() -> void:
 
 	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
 	if logo_texture != null:
-		var logo := TextureRect.new()
+		var logo := Sprite2D.new()
 		logo.texture = logo_texture
-		logo.position = Vector2(52, 170)
-		logo.size = Vector2(616, 205)
-		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.position = Vector2(360, 270)
+		var logo_scale := 616.0 / float(logo_texture.get_width())
+		logo.scale = Vector2.ONE * logo_scale
 		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(logo)
 	else:
 		Brand.title(self, "Thetale", Rect2(52, 170, 616, 100), 68)
