@@ -27,6 +27,21 @@
 	  "song_id": "leisure",
 	  "score": 1000000,
 	  "description": "Leisure 达到满分 1,000,000"
-	}
+	  }
+	},
+	{
+	  "id": "cenyin",
+	  "name": "岑音",
+	  "title": "月下的编曲者",
+	  "description": "冷静而敏锐的音乐制作人，习惯在夜深时整理旋律。她相信每一段安静，都藏着下一拍的入口。",
+	  "quote": "把今晚的声音，留给明天继续。",
+	  "portrait": "res://assets/characters/cenyin.png",
+	  "background": "res://assets/backgrounds/home_cenyin_moonlit_studio.png",
+	  "accent": "#9EC7FF",
+	  "unlock": {
+		"type": "login_days",
+		"days": 30,
+		"description": "累计登录 30 天领取"
+	  }
   }
 ]

@@ -178,6 +178,35 @@ static func grant_score_rewards(tree: SceneTree, scores: Dictionary, storage_dir
 			tree.set_meta("partner_profile", profile)
 	return rewards
 
+static func grant_login_day_rewards(tree: SceneTree, login_days: int, storage_directory: String = "user://") -> Array[Dictionary]:
+	var rewards: Array[Dictionary] = []
+	if _profile(tree).is_empty():
+		return rewards
+	var profile := _profile(tree).duplicate(true)
+	var owned = profile.get("owned", [])
+	if not owned is Array:
+		return rewards
+	for character in load_catalog():
+		var id := str(character.get("id", ""))
+		if id.is_empty() or owned.has(id):
+			continue
+		var unlock = character.get("unlock", {})
+		if not unlock is Dictionary or str(unlock.get("type", "")) != "login_days":
+			continue
+		var required_days := int(unlock.get("days", 0))
+		if required_days <= 0 or login_days < required_days:
+			continue
+		owned.append(id)
+		rewards.append(character)
+	if not rewards.is_empty():
+		profile["owned"] = owned
+		if not _store(tree, profile, storage_directory):
+			push_warning("登录天数角色奖励暂时无法保存，下次登录时会再次尝试。")
+			rewards.clear()
+		else:
+			tree.set_meta("partner_profile", profile)
+	return rewards
+
 static func select_character(tree: SceneTree, id: String, storage_directory: String = "user://") -> bool:
 	if not is_owned(tree, id) or get_character(id).is_empty():
 		return false
