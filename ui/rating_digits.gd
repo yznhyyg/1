@@ -23,10 +23,10 @@ func _draw() -> void:
 		return
 
 	var glyph_count: int = value.length()
-	var gap := 3.5
-	var glyph_width := 34.0
+	var gap := 1.5
+	var glyph_width := 38.0
 	var decimal_width := 11.0
-	var glyph_height := 62.0
+	var glyph_height := 68.0
 	var total_width := 0.0
 	for character in value:
 		total_width += decimal_width if character == "." else glyph_width
@@ -43,7 +43,7 @@ func _draw() -> void:
 
 	for character in value:
 		if character == ".":
-			draw_circle(Vector2(x + dot_width * 0.5, y + height - 5.0 * scale_factor), 3.0 * scale_factor, MAIN_COLOR)
+			draw_circle(Vector2(x + dot_width * 0.5, y + height - 9.0 * scale_factor), 3.0 * scale_factor, MAIN_COLOR)
 			x += dot_width + spacing
 			continue
 		if character >= "0" and character <= "9":
