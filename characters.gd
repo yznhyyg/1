@@ -27,11 +27,11 @@ func _ready() -> void:
 		var logo := Sprite2D.new()
 		logo.texture = logo_texture
 		logo.position = Vector2(560, 51)
-		logo.scale = Vector2.ONE * (210.0 / float(logo_texture.get_width()))
+		logo.scale = Vector2.ONE * (270.0 / float(logo_texture.get_width()))
 		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(logo)
 	else:
-		Brand.title(self, "Thetale", Rect2(410, 26, 280, 54), 34)
+		Brand.title(self, "Thetale", Rect2(390, 18, 300, 70), 42)
 	var back := Button.new()
 	back.text = "← 返回"
 	back.position = Vector2(32, 84)
