@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2s3e33khi1ea"
-path="res://.godot/imported/cenyin.png-ce3da64b233df1bbc8fd496a239c42fe.ctex"
+uid="uid://ccvu6dkqysrqg"
+path="res://.godot/imported/home_luxian_midnight_rooftop.png-d0898827a202f742f8f29d842dc2eeea.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/cenyin.png"
-dest_files=["res://.godot/imported/cenyin.png-ce3da64b233df1bbc8fd496a239c42fe.ctex"]
+source_file="res://assets/backgrounds/home_luxian_midnight_rooftop.png"
+dest_files=["res://.godot/imported/home_luxian_midnight_rooftop.png-d0898827a202f742f8f29d842dc2eeea.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkgt8mma4seqg"
-path="res://.godot/imported/home_cenyin_moonlit_studio.png-c343e6e40a18b03b88921119842ca726.ctex"
+uid="uid://bqp7xsqlpuvo8"
+path="res://.godot/imported/luxian.png-734bf6ea4daf9e5f18be0c8fd711760a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/home_cenyin_moonlit_studio.png"
-dest_files=["res://.godot/imported/home_cenyin_moonlit_studio.png-c343e6e40a18b03b88921119842ca726.ctex"]
+source_file="res://assets/characters/luxian.png"
+dest_files=["res://.godot/imported/luxian.png-734bf6ea4daf9e5f18be0c8fd711760a.ctex"]
 
 [params]
 
