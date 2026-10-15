@@ -13,6 +13,10 @@ var start_button: Button
 var partner_button: Button
 var characters_button: Button
 
+# Rating frame candidates: 1 = violet capsule, 2 = cyan glass, 3 = sharp neon.
+# Keep this value at 2 for the current default; it can be changed after previewing.
+const RATING_FRAME_OPTION := 2
+
 func _ready() -> void:
 	UI.setup(self, true)
 	var character := PartnerSystem.active_character(get_tree())
@@ -72,13 +76,13 @@ func _ready() -> void:
 	if logo_texture != null:
 		var logo := Sprite2D.new()
 		logo.texture = logo_texture
-		logo.position = Vector2(166, 259)
-		logo.scale = Vector2.ONE * (244.0 / float(logo_texture.get_width()))
+		logo.position = Vector2(190, 259)
+		logo.scale = Vector2.ONE * (350.0 / float(logo_texture.get_width()))
 		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(logo)
 	else:
-		Brand.title(self, "Thetale", Rect2(44, 218, 244, 82), 48)
-		Brand.accent_line(self, Rect2(100, 310, 132, 3))
+		Brand.title(self, "Thetale", Rect2(35, 218, 350, 96), 66)
+		Brand.accent_line(self, Rect2(105, 324, 190, 3))
 	var songs := RatingSystem.load_catalog()
 	get_tree().set_meta("song_catalog", songs)
 	var scores = get_tree().get_meta("song_scores", {})
@@ -87,7 +91,7 @@ func _ready() -> void:
 	var rating_card := Panel.new()
 	rating_card.position = Vector2(40, 460)
 	rating_card.size = Vector2(260, 130)
-	rating_card.add_theme_stylebox_override("panel", UI.box(Color("#101A30"), Color("#7767D7"), 24))
+	rating_card.add_theme_stylebox_override("panel", _rating_frame(RATING_FRAME_OPTION))
 	add_child(rating_card)
 	var rating_texture := load("res://assets/branding/thetale_rating_b.png") as Texture2D
 	if rating_texture != null:
@@ -136,8 +140,8 @@ func _ready() -> void:
 	characters_button = Button.new()
 	characters_button.name = "CharactersButton"
 	characters_button.text = "角色"
-	characters_button.position = Vector2(44, 704)
-	characters_button.size = Vector2(224, 48)
+	characters_button.position = Vector2(470, 1080)
+	characters_button.size = Vector2(210, 54)
 	characters_button.add_theme_font_size_override("font_size", 18)
 	characters_button.pressed.connect(_open_characters)
 	add_child(characters_button)
@@ -157,3 +161,34 @@ func _open_characters() -> void:
 
 func _start_game() -> void:
 	get_tree().change_scene_to_file("res://song_select.tscn")
+
+func _rating_frame(option: int) -> StyleBoxFlat:
+	var frame := StyleBoxFlat.new()
+	frame.bg_color = Color("#101A30")
+	frame.corner_radius_top_left = 22
+	frame.corner_radius_top_right = 22
+	frame.corner_radius_bottom_right = 22
+	frame.corner_radius_bottom_left = 22
+	frame.content_margin_left = 12.0
+	frame.content_margin_right = 12.0
+	frame.content_margin_top = 8.0
+	frame.content_margin_bottom = 8.0
+	match option:
+		1:
+			frame.border_color = Color("#7767D7")
+			frame.set_border_width_all(2)
+		2:
+			frame.bg_color = Color(0.055, 0.11, 0.19, 0.88)
+			frame.border_color = Color("#66E7DA")
+			frame.set_border_width_all(1)
+			frame.shadow_color = Color(0.0, 0.0, 0.0, 0.38)
+			frame.shadow_size = 8
+		3:
+			frame.bg_color = Color("#0B1224")
+			frame.border_color = Color("#B6A6FF")
+			frame.set_border_width_all(2)
+			frame.corner_radius_top_left = 8
+			frame.corner_radius_top_right = 28
+			frame.corner_radius_bottom_right = 8
+			frame.corner_radius_bottom_left = 28
+	return frame
