@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080f20"/>
+      <stop offset="1" stop-color="#151f39"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+  <text x="600" y="58" text-anchor="middle" fill="#f4f1ff" font-family="Arial,sans-serif" font-size="30" font-weight="700">THETALE · RATING FRAME OPTIONS</text>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <text x="200" y="112" fill="#b6a6ff" font-size="22" font-weight="700">1 · VIOLET CAPSULE</text>
+    <rect x="50" y="140" width="300" height="260" rx="34" fill="#101a30" stroke="#7767d7" stroke-width="4" filter="url(#shadow)"/>
+    <text x="200" y="205" fill="#66e7da" font-size="22" font-weight="700">RATING</text>
+    <text x="200" y="300" fill="#fff" font-size="68" font-weight="700">0.637</text>
+    <text x="200" y="360" fill="#9ba9c5" font-size="16">柔和、圆润、稳定</text>
+
+    <text x="600" y="112" fill="#66e7da" font-size="22" font-weight="700">2 · CYAN GLASS</text>
+    <rect x="450" y="140" width="300" height="260" rx="24" fill="#12243a" fill-opacity=".92" stroke="#66e7da" stroke-width="2" filter="url(#shadow)"/>
+    <text x="600" y="205" fill="#66e7da" font-size="22" font-weight="700">RATING</text>
+    <text x="600" y="300" fill="#fff" font-size="68" font-weight="700">0.637</text>
+    <text x="600" y="360" fill="#9ba9c5" font-size="16">通透、轻盈、科技感</text>
+
+    <text x="1000" y="112" fill="#b6a6ff" font-size="22" font-weight="700">3 · SHARP NEON</text>
+    <path d="M480 0H270Q250 0 250 20V240Q250 260 270 260H480Q500 260 500 240V20Q500 0 480 0Z" transform="translate(750 140)" fill="#0b1224" stroke="#b6a6ff" stroke-width="4" filter="url(#shadow)"/>
+    <text x="1000" y="205" fill="#66e7da" font-size="22" font-weight="700">RATING</text>
+    <text x="1000" y="300" fill="#fff" font-size="68" font-weight="700">0.637</text>
+    <text x="1000" y="360" fill="#9ba9c5" font-size="16">锐利、俐落、舞台感</text>
+  </g>
+</svg>
