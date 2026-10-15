@@ -85,23 +85,23 @@ func _ready() -> void:
 	if not scores is Dictionary:
 		scores = {}
 	var rating_card := Panel.new()
-	rating_card.position = Vector2(44, 460)
-	rating_card.size = Vector2(244, 130)
+	rating_card.position = Vector2(40, 460)
+	rating_card.size = Vector2(260, 130)
 	rating_card.add_theme_stylebox_override("panel", UI.box(Color("#101A30"), Color("#7767D7"), 24))
 	add_child(rating_card)
 	var rating_texture := load("res://assets/branding/thetale_rating_b.png") as Texture2D
 	if rating_texture != null:
 		var rating_logo := Sprite2D.new()
 		rating_logo.texture = rating_texture
-		rating_logo.position = Vector2(120, 28)
-		rating_logo.scale = Vector2.ONE * (180.0 / float(rating_texture.get_width()))
+		rating_logo.position = Vector2(130, 28)
+		rating_logo.scale = Vector2.ONE * (220.0 / float(rating_texture.get_width()))
 		rating_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		rating_card.add_child(rating_logo)
 	else:
 		var rating_heading := UI.label(rating_card, "RATING", Rect2(20, 10, 204, 28), 17, UI.CYAN)
 		rating_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	personal_rating_label = RatingDigits.new()
-	personal_rating_label.position = Vector2(60, 510)
+	personal_rating_label.position = Vector2(64, 510)
 	personal_rating_label.size = Vector2(212, 70)
 	personal_rating_label.text = "%.3f" % RatingSystem.personal_rating(songs, scores)
 	personal_rating_label.add_theme_font_size_override("font_size", 40)
