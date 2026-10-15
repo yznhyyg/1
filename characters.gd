@@ -6,6 +6,7 @@ const Partners = preload("res://partner_system.gd")
 
 var characters: Array[Dictionary] = []
 var selected_id := ""
+var character_background: TextureRect
 var portrait: TextureRect
 var portrait_placeholder: Label
 var name_label: Label
@@ -33,6 +34,7 @@ func _ready() -> void:
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
 	move_child(background, 0)
+	character_background = background
 	var shade := ColorRect.new()
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	shade.color = Color(0.015, 0.025, 0.07, 0.42)
@@ -40,6 +42,7 @@ func _ready() -> void:
 	add_child(shade)
 	move_child(shade, 1)
 	characters = Partners.load_catalog()
+	_update_character_background(Partners.active_character(get_tree()))
 	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
 	if logo_texture != null:
 		var logo := Sprite2D.new()
@@ -131,6 +134,7 @@ func _select(id: String) -> void:
 	if character.is_empty():
 		return
 	selected_id = id
+	_update_character_background(character)
 	name_label.text = str(character.get("name", id))
 	name_label.tooltip_text = name_label.text
 	title_label.text = str(character.get("title", ""))
@@ -149,6 +153,11 @@ func _select(id: String) -> void:
 	action_button.disabled = not owned or active == id
 	action_button.text = "当前上场角色" if owned and active == id else ("设为上场角色" if owned else "尚未拥有")
 	_refresh_list()
+
+func _update_character_background(character: Dictionary) -> void:
+	if character_background == null:
+		return
+	character_background.texture = Partners.background_texture(character)
 
 func _refresh_list() -> void:
 	var count := 0
