@@ -21,6 +21,24 @@ var character_buttons: Array[Button] = []
 
 func _ready() -> void:
 	UI.setup(self, true)
+	var default_background := get_child(0)
+	if default_background is Control:
+		default_background.hide()
+	var background := TextureRect.new()
+	background.texture = preload("res://assets/backgrounds/home_midnight_atrium.png")
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+	move_child(background, 0)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.015, 0.025, 0.07, 0.42)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
+	move_child(shade, 1)
 	characters = Partners.load_catalog()
 	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
 	if logo_texture != null:
