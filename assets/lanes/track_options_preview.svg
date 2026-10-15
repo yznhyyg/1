@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080f20"/><stop offset="1" stop-color="#17213a"/>
+    </linearGradient>
+    <linearGradient id="laneA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101c32"/><stop offset="1" stop-color="#172948"/></linearGradient>
+    <linearGradient id="laneB" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0d1a2e"/><stop offset="1" stop-color="#183047"/></linearGradient>
+    <linearGradient id="laneC" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#15172f"/><stop offset="1" stop-color="#102b3a"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity=".4"/></filter>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="url(#page)"/>
+  <text x="600" y="52" text-anchor="middle" fill="#f4f1ff" font-family="Arial,sans-serif" font-size="30" font-weight="700">THETALE · TRACK BACKGROUND OPTIONS</text>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <g transform="translate(35 84)">
+      <text x="170" y="0" fill="#b6a6ff" font-size="21" font-weight="700">A · QUIET GRID</text>
+      <rect x="0" y="24" width="340" height="490" rx="20" fill="#0b1326" stroke="#303c57"/>
+      <g opacity=".22" stroke="#56719b" stroke-width="1"><path d="M0 140L340 60M0 230L340 150M0 320L340 240M0 410L340 330M0 500L340 420"/><path d="M70 24L340 294M0 120L340 460"/></g>
+      <g transform="translate(45 62)" filter="url(#shadow)"><rect width="250" height="145" rx="14" fill="url(#laneA)" stroke="#4b6287" stroke-width="2"/><rect y="205" width="250" height="145" rx="14" fill="url(#laneA)" stroke="#4b6287" stroke-width="2"/><g stroke="#536d93" opacity=".75"><path d="M62 0V145M125 0V145M188 0V145M62 205V350M125 205V350M188 205V350"/></g><g stroke="#66e7da" stroke-width="3"><path d="M0 130H250"/><path d="M0 225H250"/></g></g>
+      <text x="170" y="470" fill="#9ba9c5" font-size="15">斜线网格 · 最轻量</text>
+    </g>
+    <g transform="translate(430 84)">
+      <text x="170" y="0" fill="#66e7da" font-size="21" font-weight="700">B · CONSTELLATION</text>
+      <rect x="0" y="24" width="340" height="490" rx="20" fill="#091322" stroke="#2f536d"/>
+      <g fill="#66e7da" opacity=".36"><circle cx="28" cy="76" r="2"/><circle cx="88" cy="45" r="1.5"/><circle cx="298" cy="102" r="2"/><circle cx="320" cy="260" r="1.5"/><circle cx="22" cy="390" r="2"/><circle cx="280" cy="450" r="1.5"/></g>
+      <g stroke="#4b6a85" stroke-width="1" opacity=".26"><path d="M28 76L88 45L150 84L298 102"/><path d="M22 390L120 340L220 410L280 450"/></g>
+      <g transform="translate(45 62)" filter="url(#shadow)"><rect width="250" height="145" rx="14" fill="url(#laneB)" stroke="#41647d" stroke-width="2"/><rect y="205" width="250" height="145" rx="14" fill="url(#laneB)" stroke="#41647d" stroke-width="2"/><g stroke="#52738a" opacity=".8"><path d="M62 0V145M125 0V145M188 0V145M62 205V350M125 205V350M188 205V350"/></g><g stroke="#66e7da" stroke-width="3"><path d="M0 130H250"/><path d="M0 225H250"/></g></g>
+      <text x="170" y="470" fill="#9ba9c5" font-size="15">星点与连线 · 氛围更强</text>
+    </g>
+    <g transform="translate(825 84)">
+      <text x="170" y="0" fill="#b6a6ff" font-size="21" font-weight="700">C · SOFT WAVES</text>
+      <rect x="0" y="24" width="340" height="490" rx="20" fill="#101329" stroke="#493f70"/>
+      <g fill="none" stroke="#7767d7" stroke-width="2" opacity=".2"><path d="M-20 100Q80 30 180 100T380 100"/><path d="M-20 180Q80 110 180 180T380 180"/><path d="M-20 360Q80 290 180 360T380 360"/><path d="M-20 440Q80 370 180 440T380 440"/></g>
+      <g transform="translate(45 62)" filter="url(#shadow)"><rect width="250" height="145" rx="14" fill="url(#laneC)" stroke="#65599d" stroke-width="2"/><rect y="205" width="250" height="145" rx="14" fill="url(#laneC)" stroke="#65599d" stroke-width="2"/><g stroke="#665f94" opacity=".8"><path d="M62 0V145M125 0V145M188 0V145M62 205V350M125 205V350M188 205V350"/></g><g stroke="#9c87ff" stroke-width="3"><path d="M0 130H250"/><path d="M0 225H250"/></g></g>
+      <text x="170" y="470" fill="#9ba9c5" font-size="15">柔和波纹 · 视觉更有流动感</text>
+    </g>
+  </g>
+</svg>
