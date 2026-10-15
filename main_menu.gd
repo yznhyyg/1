@@ -5,6 +5,7 @@ const PartnerSystem = preload("res://partner_system.gd")
 const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const RatingDigits = preload("res://ui/rating_digits.gd")
+const RatingPattern = preload("res://ui/rating_pattern.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -91,8 +92,13 @@ func _ready() -> void:
 	var rating_card := Panel.new()
 	rating_card.position = Vector2(40, 460)
 	rating_card.size = Vector2(260, 130)
+	rating_card.clip_contents = true
 	rating_card.add_theme_stylebox_override("panel", _rating_frame(RATING_FRAME_OPTION))
 	add_child(rating_card)
+	var rating_pattern := RatingPattern.new()
+	rating_pattern.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	rating_pattern.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rating_card.add_child(rating_pattern)
 	var rating_texture := load("res://assets/branding/thetale_rating_b.png") as Texture2D
 	if rating_texture != null:
 		var rating_logo := Sprite2D.new()
@@ -180,7 +186,7 @@ func _rating_frame(option: int) -> StyleBoxFlat:
 		2:
 			frame.bg_color = Color(0.055, 0.11, 0.19, 0.88)
 			frame.border_color = Color("#66E7DA")
-			frame.set_border_width_all(1)
+			frame.set_border_width_all(2)
 			frame.shadow_color = Color(0.0, 0.0, 0.0, 0.38)
 			frame.shadow_size = 8
 		3:
