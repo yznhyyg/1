@@ -50,6 +50,7 @@
 
 - `unlock.type` 为 `login`：每次登录自动检查并补发该角色，不会重复添加。
 - `unlock.type` 为 `song_score`：按 `song_id` 对应歌曲的最高分检查 `score` 门槛，在结算和登录读取历史成绩后自动解锁。祁澈使用 `song_id: "leisure"`、`score: 1000000`，SSS+ 或 Full Combo 本身不等于满分。
+- `unlock.type` 为 `login_days`：登录成功后按自然日累计登录天数，达到 `days` 后自动解锁。首次使用前请在 Supabase SQL 编辑器运行 `supabase_login_days.sql`，为 `player_settings` 添加登录天数字段。
 - `unlock.type` 为 `manual`（或省略）：角色默认未解锁，需要在实际任务或奖励逻辑中调用解锁接口。
 - `unlock.description` 是给玩家看的说明文字；实际条件由 `type`、`song_id` 和 `score` 决定。歌曲编号使用歌曲文件夹名。
 

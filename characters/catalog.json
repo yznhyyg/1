@@ -27,6 +27,21 @@
 	  "song_id": "leisure",
 	  "score": 1000000,
 	  "description": "Leisure 达到满分 1,000,000"
-	}
+		}
+	  },
+	{
+	  "id": "luxian",
+	  "name": "陆弦",
+	  "title": "夜行的节拍师",
+	  "description": "习惯在城市安静下来之后整理旋律。他不追逐喧闹，只在每一次落拍前留下最准确的停顿。",
+	  "quote": "留一点空白，节奏才有呼吸。",
+	  "portrait": "res://assets/characters/luxian.png",
+	  "background": "res://assets/backgrounds/home_luxian_midnight_rooftop.png",
+	  "accent": "#8DB8FF",
+	  "unlock": {
+		"type": "login_days",
+		"days": 30,
+		"description": "累计登录 30 天领取"
+	  }
   }
 ]

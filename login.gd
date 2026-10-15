@@ -18,6 +18,7 @@ var busy := false
 var auth_operation := ""
 var bootstrap_user_id := ""
 var bootstrap_access_token := ""
+var settings_fallback_attempted := false
 
 func _ready() -> void:
 	UI.setup(self)
@@ -132,6 +133,9 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 	if operation == "load_scores":
 		_finish_cloud_scores_load(result, response_code, data)
 		return
+	if operation == "track_login":
+		_finish_login_day_track(result, response_code)
+		return
 
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
 		if operation == "restore":
@@ -159,7 +163,9 @@ func _load_cloud_settings_after_login(session: Dictionary) -> void:
 	get_tree().set_meta("game_settings", {
 		"note_speed": 1.0,
 		"artwork_brightness": 0.65,
-		"chart_offset": 0.0
+		"chart_offset": 0.0,
+		"login_days": 0,
+		"last_login_date": ""
 	})
 
 	var user = session.get("user", {})
@@ -173,32 +179,100 @@ func _load_cloud_settings_after_login(session: Dictionary) -> void:
 	bootstrap_access_token = access_token
 	busy = true
 	auth_operation = "load_settings"
+	settings_fallback_attempted = false
 	message_label.text = "登录成功，正在读取云端设置……"
+	_request_cloud_settings(true)
+
+func _request_cloud_settings(include_login_fields: bool) -> void:
 	var headers := PackedStringArray([
 		"apikey: " + SupabaseConfig.PUBLISHABLE_KEY,
-		"Authorization: Bearer " + access_token
+		"Authorization: Bearer " + bootstrap_access_token
 	])
+	var select_fields := "note_speed,artwork_brightness,chart_offset"
+	if include_login_fields:
+		select_fields += ",login_days,last_login_date"
 	var url := SupabaseConfig.PROJECT_URL + "/rest/v1/player_settings"
-	url += "?user_id=eq." + user_id
-	url += "&select=note_speed,artwork_brightness,chart_offset&limit=1"
+	url += "?user_id=eq." + bootstrap_user_id
+	url += "&select=" + select_fields + "&limit=1"
 	var error := request.request(url, headers, HTTPClient.METHOD_GET)
 	if error != OK:
-		busy = false
-		auth_operation = ""
-		_load_cloud_scores_after_settings()
+		if include_login_fields and not settings_fallback_attempted:
+			settings_fallback_attempted = true
+			busy = true
+			auth_operation = "load_settings"
+			_request_cloud_settings(false)
+		else:
+			busy = false
+			auth_operation = ""
+			_load_cloud_scores_after_settings()
 
 func _finish_cloud_settings_load(result: int, response_code: int, response) -> void:
 	var succeeded := result == HTTPRequest.RESULT_SUCCESS and response_code >= 200 and response_code < 300
+	if not succeeded and not settings_fallback_attempted:
+		settings_fallback_attempted = true
+		busy = true
+		auth_operation = "load_settings"
+		_request_cloud_settings(false)
+		return
 	if succeeded and response is Array and not response.is_empty() and response[0] is Dictionary:
 		var cloud: Dictionary = response[0]
 		get_tree().set_meta("game_settings", {
 			"note_speed": clampf(float(cloud.get("note_speed", 1.0)), 0.1, 12.0),
 			"artwork_brightness": clampf(float(cloud.get("artwork_brightness", 0.65)), 0.0, 1.0),
-			"chart_offset": clampf(float(cloud.get("chart_offset", 0.0)), -0.5, 0.5)
+			"chart_offset": clampf(float(cloud.get("chart_offset", 0.0)), -0.5, 0.5),
+			"login_days": maxi(int(cloud.get("login_days", 0)), 0),
+			"last_login_date": str(cloud.get("last_login_date", ""))
 		})
 	elif not succeeded:
 		print("登录后读取云端设置失败：", response_code)
-	# 设置读取完成后继续加载歌曲成绩缓存；失败时使用空缓存。
+	_track_login_day()
+
+func _track_login_day() -> void:
+	var settings = get_tree().get_meta("game_settings", {})
+	if not settings is Dictionary:
+		settings = {}
+	var today := Time.get_date_string_from_system()
+	var current_days := maxi(int(settings.get("login_days", 0)), 0)
+	var last_date := str(settings.get("last_login_date", ""))
+	if last_date == today:
+		PartnerSystem.grant_login_day_rewards(get_tree(), current_days)
+		_load_cloud_scores_after_settings()
+		return
+	var updated_days := current_days + 1
+	get_tree().set_meta("game_settings", {
+		"note_speed": float(settings.get("note_speed", 1.0)),
+		"artwork_brightness": float(settings.get("artwork_brightness", 0.65)),
+		"chart_offset": float(settings.get("chart_offset", 0.0)),
+		"login_days": updated_days,
+		"last_login_date": today
+	})
+	busy = true
+	auth_operation = "track_login"
+	var headers := PackedStringArray([
+		"Content-Type: application/json",
+		"apikey: " + SupabaseConfig.PUBLISHABLE_KEY,
+		"Authorization: Bearer " + bootstrap_access_token,
+		"Prefer: resolution=merge-duplicates,return=minimal"
+	])
+	var url := SupabaseConfig.PROJECT_URL + "/rest/v1/player_settings?on_conflict=user_id"
+	var body := JSON.stringify({
+		"user_id": bootstrap_user_id,
+		"login_days": updated_days,
+		"last_login_date": today
+	})
+	var error := request.request(url, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		busy = false
+		auth_operation = ""
+		_load_cloud_scores_after_settings()
+
+func _finish_login_day_track(result: int, response_code: int) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		print("登录天数保存失败：", response_code)
+	else:
+		var settings = get_tree().get_meta("game_settings", {})
+		var login_days := int(settings.get("login_days", 0)) if settings is Dictionary else 0
+		PartnerSystem.grant_login_day_rewards(get_tree(), login_days)
 	_load_cloud_scores_after_settings()
 
 func _load_cloud_scores_after_settings() -> void:
