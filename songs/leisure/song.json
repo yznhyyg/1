@@ -1,6 +1,7 @@
 {
   "title": "leisure",
   "constant": 8.5,
+  "difficulties": ["初级", "中级", "高级"],
   "chart": "chart.json",
   "music": "music.ogg",
   "artwork": "artwork.png",

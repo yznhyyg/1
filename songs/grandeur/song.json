@@ -1,6 +1,7 @@
 {
   "title": "Grandeur",
   "constant": 7.8,
+  "difficulties": ["初级", "中级", "高级"],
   "chart": "grandeur.json",
   "music": "grandeur.ogg",
   "artwork": "grandeur.png",
