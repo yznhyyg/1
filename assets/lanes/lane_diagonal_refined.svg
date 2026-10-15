@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="540" viewBox="0 0 120 540">
+  <rect width="120" height="540" fill="#111a30"/>
+  <!-- Narrow, low-contrast diagonal bands keep the original idea without filling the lane. -->
+  <path d="M-34 92L-8 92L88 -4L62 -4Z" fill="#27365a" fill-opacity=".52"/>
+  <path d="M-34 232L-8 232L120 104L120 76Z" fill="#27365a" fill-opacity=".52"/>
+  <path d="M-34 372L-8 372L120 244L120 216Z" fill="#27365a" fill-opacity=".52"/>
+  <path d="M-34 512L-8 512L120 384L120 356Z" fill="#27365a" fill-opacity=".52"/>
+  <path d="M0 0H120M0 540H120" stroke="#66e7da" stroke-opacity=".45" stroke-width="1"/>
+  <path d="M8 120H22M98 260H112M8 400H22" stroke="#9aaed0" stroke-opacity=".22" stroke-width="1"/>
+</svg>
