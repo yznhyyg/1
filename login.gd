@@ -311,6 +311,10 @@ func _finish_cloud_scores_load(result: int, response_code: int, response) -> voi
 
 func _start_main_menu() -> void:
 	PartnerSystem.grant_starter(get_tree())
+	# 初始化本地角色档案后，再按云端登录天数发放奖励。
+	var settings = get_tree().get_meta("game_settings", {})
+	if settings is Dictionary:
+		PartnerSystem.grant_login_day_rewards(get_tree(), int(settings.get("login_days", 0)))
 	var scores = get_tree().get_meta("song_scores", {})
 	if scores is Dictionary:
 		PartnerSystem.grant_score_rewards(get_tree(), scores)
