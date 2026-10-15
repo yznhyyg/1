@@ -26,7 +26,7 @@ func _ready() -> void:
 	if logo_texture != null:
 		var logo := Sprite2D.new()
 		logo.texture = logo_texture
-		logo.position = Vector2(560, 51)
+		logo.position = Vector2(500, 100)
 		logo.scale = Vector2.ONE * (470.0 / float(logo_texture.get_width()))
 		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(logo)
