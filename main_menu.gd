@@ -7,6 +7,7 @@ const Brand = preload("res://ui/brand.gd")
 const RatingDigits = preload("res://ui/rating_digits.gd")
 const RatingPattern = preload("res://ui/rating_pattern.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
+const PortraitMotion = preload("res://ui/portrait_motion.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -14,8 +15,6 @@ var character_background: TextureRect
 var start_button: Button
 var partner_button: Button
 var characters_button: Button
-var portrait_base_position := Vector2.ZERO
-var portrait_elapsed := 0.0
 
 # Rating frame candidates: 1 = violet capsule, 2 = cyan glass, 3 = sharp neon.
 # Keep this value at 2 for the current default; it can be changed after previewing.
@@ -61,8 +60,9 @@ func _ready() -> void:
 	partner_portrait.offset_top = 164
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
-	partner_portrait.pivot_offset = partner_portrait.size * 0.5
-	portrait_base_position = partner_portrait.position
+	var portrait_motion := PortraitMotion.new()
+	portrait_motion.setup(partner_portrait, 1.0)
+	add_child(portrait_motion)
 	if partner_portrait.texture == null:
 		UI.label(self, "立绘待补充", Rect2(330, 580, 320, 48), 20, UI.MUTED)
 	# A transparent hit area stays to the right of the home controls.
@@ -164,20 +164,6 @@ func _ready() -> void:
 	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
-
-func _process(delta: float) -> void:
-	portrait_elapsed += delta
-	if is_instance_valid(partner_portrait):
-		var t := portrait_elapsed
-		# Layered low-frequency drift avoids the rigid single-sine loop.
-		var drift := sin(t * 0.53 + 0.4) * 2.7 + sin(t * 0.31 + 1.7) * 1.35 + sin(t * 0.17 + 2.6) * 0.65
-		partner_portrait.position.y = portrait_base_position.y + drift
-		var tilt := sin(t * 0.41 + 0.8) * 0.25 + sin(t * 0.23 + 2.0) * 0.10
-		partner_portrait.rotation = deg_to_rad(tilt)
-		var breath_phase := 0.5 + 0.5 * sin(t * 0.49 + 0.8)
-		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
-		var breath := 1.0 + (breath_ease - 0.5) * 0.006
-		partner_portrait.scale = Vector2(breath, breath)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):

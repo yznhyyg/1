@@ -4,6 +4,7 @@ const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const Partners = preload("res://partner_system.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
+const PortraitMotion = preload("res://ui/portrait_motion.gd")
 
 var characters: Array[Dictionary] = []
 var selected_id := ""
@@ -20,8 +21,6 @@ var status_label: Label
 var action_button: Button
 var list_box: VBoxContainer
 var character_buttons: Array[Button] = []
-var portrait_base_position := Vector2.ZERO
-var portrait_elapsed := 0.0
 
 func _ready() -> void:
 	UI.setup(self, true)
@@ -77,8 +76,9 @@ func _ready() -> void:
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
-	portrait.pivot_offset = portrait.size * 0.5
-	portrait_base_position = portrait.position
+	var portrait_motion := PortraitMotion.new()
+	portrait_motion.setup(portrait, 0.78)
+	add_child(portrait_motion)
 	portrait_placeholder = UI.label(self, "立绘待补充", Rect2(400, 478, 240, 40), 20, UI.MUTED)
 	name_label = UI.label(self, "", Rect2(56, 274, 256, 60), 38)
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -137,19 +137,6 @@ func _ready() -> void:
 		status_label.text = "登录后即可获得初始伙伴"
 	back.grab_focus()
 	UI.reveal(self)
-
-func _process(delta: float) -> void:
-	portrait_elapsed += delta
-	if is_instance_valid(portrait):
-		var t := portrait_elapsed
-		var drift := sin(t * 0.47 + 1.1) * 2.25 + sin(t * 0.29 + 0.2) * 1.0 + sin(t * 0.13 + 2.4) * 0.5
-		portrait.position.y = portrait_base_position.y + drift
-		var tilt := sin(t * 0.36 + 1.5) * 0.18 + sin(t * 0.19) * 0.07
-		portrait.rotation = deg_to_rad(tilt)
-		var breath_phase := 0.5 + 0.5 * sin(t * 0.44 + 1.2)
-		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
-		var breath := 1.0 + (breath_ease - 0.5) * 0.0045
-		portrait.scale = Vector2(breath, breath)
 
 func _select(id: String) -> void:
 	var character := Partners.get_character(id)
