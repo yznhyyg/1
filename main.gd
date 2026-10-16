@@ -367,7 +367,14 @@ func _load_song_package() -> void:
 	if not config is Dictionary:
 		push_error("song.json 必须是 JSON 对象")
 		return
-	var chart_file: String = song_folder + "/" + str(config.get("chart", "chart.json"))
+	var chart_name := str(config.get("chart", "chart.json"))
+	var selected_difficulty := str(get_tree().get_meta("selected_song_difficulty", ""))
+	var difficulties = config.get("difficulties", {})
+	if difficulties is Dictionary and not selected_difficulty.is_empty():
+		var difficulty_data = difficulties.get(selected_difficulty, {})
+		if difficulty_data is Dictionary and not str(difficulty_data.get("chart", "")).is_empty():
+			chart_name = str(difficulty_data.get("chart"))
+	var chart_file: String = song_folder + "/" + chart_name
 	var music_file: String = song_folder + "/" + str(config.get("music", "music.ogg"))
 	var artwork_file: String = song_folder + "/" + str(config.get("artwork", "artwork.png"))
 	# 预备拍属于每首歌曲自己的配置。4/4 拍通常填写 beats: 4。

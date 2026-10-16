@@ -12,6 +12,8 @@ var artwork: TextureRect
 var best_score_label: Label
 var list_box: VBoxContainer
 var song_buttons: Array[Button] = []
+var difficulty_box: HBoxContainer
+var selected_difficulty_key := "advanced"
 var preview_player: AudioStreamPlayer
 var best_scores: Dictionary = {}
 var preview_end_time: float = 0.0
@@ -127,6 +129,19 @@ func _ready() -> void:
 	list_box.add_theme_constant_override("separation", 10)
 	scroll.add_child(list_box)
 
+	var difficulty_title := Label.new()
+	difficulty_title.text = "选择难度 / DIFFICULTY"
+	difficulty_title.position = Vector2(32, 1062)
+	difficulty_title.size = Vector2(300, 24)
+	difficulty_title.add_theme_color_override("font_color", Color("#9BA6BE"))
+	difficulty_title.add_theme_font_size_override("font_size", 14)
+	add_child(difficulty_title)
+	difficulty_box = HBoxContainer.new()
+	difficulty_box.position = Vector2(32, 1088)
+	difficulty_box.size = Vector2(656, 58)
+	difficulty_box.add_theme_constant_override("separation", 8)
+	add_child(difficulty_box)
+
 	var start := Button.new()
 	start.text = "开始游戏     ENTER  →"
 	start.position = Vector2(32, 1165)
@@ -211,6 +226,59 @@ func _create_song_buttons() -> void:
 	if not songs.is_empty():
 		_select_song(0)
 
+func _build_difficulty_buttons(song: Dictionary) -> void:
+	if difficulty_box == null:
+		return
+	for child in difficulty_box.get_children():
+		child.queue_free()
+	var difficulties = song.get("difficulties", {})
+	if not difficulties is Dictionary:
+		difficulties = {}
+	var order := ["beginner", "normal", "advanced", "master"]
+	var first_key := ""
+	for key in order:
+		if key == "master" and not bool(song.get("master_enabled", false)):
+			continue
+		var item = difficulties.get(key, {})
+		if not item is Dictionary:
+			continue
+		var chart := str(item.get("chart", ""))
+		if chart.is_empty():
+			continue
+		if first_key.is_empty():
+			first_key = key
+		var button := Button.new()
+		button.text = str(item.get("name", key))
+		button.custom_minimum_size = Vector2(158, 52)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.add_theme_font_size_override("font_size", 18)
+		button.pressed.connect(_select_difficulty.bind(key))
+		difficulty_box.add_child(button)
+	selected_difficulty_key = first_key if not first_key.is_empty() else "advanced"
+	_update_difficulty_button_styles()
+
+func _select_difficulty(key: String) -> void:
+	selected_difficulty_key = key
+	_update_difficulty_button_styles()
+
+func _update_difficulty_button_styles() -> void:
+	if difficulty_box == null:
+		return
+	for child in difficulty_box.get_children():
+		if not child is Button:
+			continue
+		var button := child as Button
+		var active := button.text == _difficulty_name(selected_difficulty_key)
+		button.add_theme_color_override("font_color", Color.WHITE if active else Color("#B8C0D2"))
+		button.add_theme_stylebox_override("normal", _make_button_style(Color("#211F3B") if active else Color("#111621"), UI.ACCENT if active else Color("#202738"), 6))
+		button.add_theme_stylebox_override("hover", _make_button_style(Color("#29264A"), UI.ACCENT, 6))
+
+func _difficulty_name(key: String) -> String:
+	var song: Dictionary = songs[selected_index] if selected_index < songs.size() else {}
+	var difficulties = song.get("difficulties", {})
+	var item = difficulties.get(key, {}) if difficulties is Dictionary else {}
+	return str(item.get("name", key)) if item is Dictionary else key
+
 func _open_settings() -> void:
 	if preview_player != null:
 		preview_player.stop()
@@ -224,6 +292,7 @@ func _select_song(index: int) -> void:
 	title_label.text = str(song.get("title", "未命名歌曲"))
 	level_label.text = RatingSystem.level_text(song)
 	_update_best_score_display()
+	_build_difficulty_buttons(song)
 	var artwork_path := str(song["folder"]) + "/" + str(song.get("artwork", "artwork.png"))
 	if ResourceLoader.exists(artwork_path):
 		artwork.texture = load(artwork_path)
@@ -316,6 +385,7 @@ func _start_game() -> void:
 	preview_player.stop()
 	preview_player.volume_db = 0.0
 	get_tree().set_meta("selected_song_folder", songs[selected_index]["folder"])
+	get_tree().set_meta("selected_song_difficulty", selected_difficulty_key)
 	# 设置场景会持续保存 game_settings，这里只负责选择歌曲。
 	get_tree().change_scene_to_file("res://main.tscn")
 
