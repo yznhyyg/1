@@ -27,7 +27,7 @@ func _draw() -> void:
 	]
 	for index in points.size():
 		var pulse := 0.72 + sin(elapsed * 0.7 + float(index) * 1.8) * 0.28
-		var point := points[index] * scale
+		var point: Vector2 = points[index] * scale
 		draw_circle(point, (1.4 + float(index % 2)) * scale.x, dust if index % 3 else dust_soft * pulse)
 
 	_draw_meteor(Vector2(540, 190), 17.0, 0.0, scale)
