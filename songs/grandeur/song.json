@@ -2,6 +2,7 @@
   "title": "Grandeur",
   "constant": 7.8,
   "difficulties": {
+<<<<<<< HEAD
 	"beginner": {
 	  "name": "初级",
 	  "chart": "beginner_chart.json"
@@ -14,6 +15,23 @@
 	  "name": "高级",
 	  "chart": "advanced_chart.json"
 	}
+=======
+    "beginner": {
+      "name": "初级",
+      "chart": "beginner_chart.json",
+      "constant": 5.0
+    },
+    "normal": {
+      "name": "中级",
+      "chart": "normal_chart.json",
+      "constant": 6.5
+    },
+    "advanced": {
+      "name": "高级",
+      "chart": "advanced_chart.json",
+      "constant": 7.8
+    }
+>>>>>>> ff135bb855893ba743bc506ed90492999492be91
   },
   "chart": "grandeur.json",
   "music": "grandeur.ogg",
