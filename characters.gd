@@ -3,6 +3,7 @@ extends Control
 const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const Partners = preload("res://partner_system.gd")
+const Atmosphere = preload("res://ui/atmosphere.gd")
 
 var characters: Array[Dictionary] = []
 var selected_id := ""
@@ -19,6 +20,8 @@ var status_label: Label
 var action_button: Button
 var list_box: VBoxContainer
 var character_buttons: Array[Button] = []
+var portrait_base_position := Vector2.ZERO
+var portrait_elapsed := 0.0
 
 func _ready() -> void:
 	UI.setup(self, true)
@@ -41,6 +44,10 @@ func _ready() -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	move_child(shade, 1)
+	var atmosphere := Atmosphere.new()
+	atmosphere.name = "AnimatedAtmosphere"
+	atmosphere.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(atmosphere)
 	characters = Partners.load_catalog()
 	_update_character_background(Partners.active_character(get_tree()))
 	var logo_texture := load("res://assets/branding/thetale_logo_a.png") as Texture2D
@@ -70,6 +77,7 @@ func _ready() -> void:
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
+	portrait_base_position = portrait.position
 	portrait_placeholder = UI.label(self, "立绘待补充", Rect2(400, 478, 240, 40), 20, UI.MUTED)
 	name_label = UI.label(self, "", Rect2(56, 274, 256, 60), 38)
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -128,6 +136,13 @@ func _ready() -> void:
 		status_label.text = "登录后即可获得初始伙伴"
 	back.grab_focus()
 	UI.reveal(self)
+
+func _process(delta: float) -> void:
+	portrait_elapsed += delta
+	if is_instance_valid(portrait):
+		portrait.position.y = portrait_base_position.y + sin(portrait_elapsed * 0.78 + 0.6) * 2.5
+		var breath := 1.0 + sin(portrait_elapsed * 0.58) * 0.003
+		portrait.scale = Vector2(breath, breath)
 
 func _select(id: String) -> void:
 	var character := Partners.get_character(id)

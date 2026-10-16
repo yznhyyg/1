@@ -6,6 +6,7 @@ const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const RatingDigits = preload("res://ui/rating_digits.gd")
 const RatingPattern = preload("res://ui/rating_pattern.gd")
+const Atmosphere = preload("res://ui/atmosphere.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -13,6 +14,8 @@ var character_background: TextureRect
 var start_button: Button
 var partner_button: Button
 var characters_button: Button
+var portrait_base_position := Vector2.ZERO
+var portrait_elapsed := 0.0
 
 # Rating frame candidates: 1 = violet capsule, 2 = cyan glass, 3 = sharp neon.
 # Keep this value at 2 for the current default; it can be changed after previewing.
@@ -38,6 +41,10 @@ func _ready() -> void:
 	shade.color = Color(0.035, 0.059, 0.114, 0.30)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
+	var atmosphere := Atmosphere.new()
+	atmosphere.name = "AnimatedAtmosphere"
+	atmosphere.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(atmosphere)
 	# The portrait is also visible when previewing this scene in the editor.
 	# Actual ownership is granted only by the successful login flow.
 	partner_portrait = TextureRect.new()
@@ -54,6 +61,7 @@ func _ready() -> void:
 	partner_portrait.offset_top = 164
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
+	portrait_base_position = partner_portrait.position
 	if partner_portrait.texture == null:
 		UI.label(self, "立绘待补充", Rect2(330, 580, 320, 48), 20, UI.MUTED)
 	# A transparent hit area stays to the right of the home controls.
@@ -155,6 +163,13 @@ func _ready() -> void:
 	var tip := UI.label(self, "TIP / 点击伙伴或按 C，查看角色。", Rect2(44, 1168, 592, 56), 16, UI.MUTED)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	UI.reveal(self)
+
+func _process(delta: float) -> void:
+	portrait_elapsed += delta
+	if is_instance_valid(partner_portrait):
+		partner_portrait.position.y = portrait_base_position.y + sin(portrait_elapsed * 0.85) * 3.0
+		var breath := 1.0 + sin(portrait_elapsed * 0.62 + 0.8) * 0.004
+		partner_portrait.scale = Vector2(breath, breath)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
