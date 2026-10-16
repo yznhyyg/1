@@ -74,6 +74,7 @@ func _ready() -> void:
 
 	level_label = UI.label(self, "", Rect2(504, 151, 160, 47), 24, UI.CYAN)
 	level_label.visible = false
+	level_label.visible = false
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var now_playing := Label.new()
 	now_playing.text = "TRACK PREVIEW / 曲目试听"
@@ -227,6 +228,20 @@ func _create_song_buttons() -> void:
 	if not songs.is_empty():
 		_select_song(0)
 
+func _difficulty_level_text(song: Dictionary, difficulty_key: String) -> String:
+	var difficulties = song.get("difficulties", {})
+	var difficulty_data = difficulties.get(difficulty_key, {}) if difficulties is Dictionary else {}
+
+	var value := float(difficulty_data.get("constant", song.get("constant", 0.0)))
+	if value <= 0.0:
+		return "LV —"
+
+	var integer_part := int(value)
+	var decimal_part := int(round(value * 10.0)) % 10
+	var suffix := "+" if decimal_part >= 7 else ""
+
+	return "LV %d%s" % [integer_part, suffix]
+	
 func _build_difficulty_buttons(song: Dictionary) -> void:
 	if difficulty_box == null:
 		return
@@ -250,7 +265,11 @@ func _build_difficulty_buttons(song: Dictionary) -> void:
 			first_key = key
 		var button := Button.new()
 		button.set_meta("difficulty_key", str(key))
-		button.text = "%s    %s" % [str(item.get("name", key)), RatingSystem.level_text_for_difficulty(song, str(key))]
+		button.set_meta("difficulty_key", str(key))
+		button.text = "%s    %s" % [
+		str(item.get("name", key)),
+		_difficulty_level_text(song, str(key))
+		]
 		button.custom_minimum_size = Vector2(158, 52)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 18)
@@ -261,8 +280,11 @@ func _build_difficulty_buttons(song: Dictionary) -> void:
 
 func _select_difficulty(key: String) -> void:
 	selected_difficulty_key = key
+
 	if selected_index < songs.size():
-		level_label.text = "%s · %s" % [RatingSystem.level_text_for_difficulty(songs[selected_index], selected_difficulty_key), _difficulty_name(selected_difficulty_key)]
+		var song: Dictionary = songs[selected_index]
+		level_label.text = _difficulty_level_text(song, key)
+
 	_update_difficulty_button_styles()
 	_update_best_score_display()
 
@@ -296,7 +318,6 @@ func _select_song(index: int) -> void:
 	_start_preview(song)
 	title_label.text = str(song.get("title", "未命名歌曲"))
 	_build_difficulty_buttons(song)
-	level_label.text = "%s · %s" % [RatingSystem.level_text_for_difficulty(song, selected_difficulty_key), _difficulty_name(selected_difficulty_key)]
 	_update_best_score_display()
 	var artwork_path := str(song["folder"]) + "/" + str(song.get("artwork", "artwork.png"))
 	if ResourceLoader.exists(artwork_path):
