@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l8cgo47k43lw"
-path="res://.godot/imported/wenxu_idle_34.png-cd17d55b6ce2a626a45ac29bb87110b1.ctex"
+uid="uid://bs2q3wcf7fbe0"
+path="res://.godot/imported/lane_diagonal_refined.svg-3353157ef05f51e711afc0fa3030c882.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/frames/wenxu_idle_34.png"
-dest_files=["res://.godot/imported/wenxu_idle_34.png-cd17d55b6ce2a626a45ac29bb87110b1.ctex"]
+source_file="res://assets/lanes/lane_diagonal_refined.svg"
+dest_files=["res://.godot/imported/lane_diagonal_refined.svg-3353157ef05f51e711afc0fa3030c882.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

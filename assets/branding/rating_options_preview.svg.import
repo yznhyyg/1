@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckp8c0poo27w1"
-path="res://.godot/imported/wenxu_idle_38.png-a18651174da064c3ec04b06a8c8952a7.ctex"
+uid="uid://d0fne47s2h36l"
+path="res://.godot/imported/rating_options_preview.svg-f8c6c9e1f303b50c279e3ab52ca2f22a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/frames/wenxu_idle_38.png"
-dest_files=["res://.godot/imported/wenxu_idle_38.png-a18651174da064c3ec04b06a8c8952a7.ctex"]
+source_file="res://assets/branding/rating_options_preview.svg"
+dest_files=["res://.godot/imported/rating_options_preview.svg-f8c6c9e1f303b50c279e3ab52ca2f22a.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

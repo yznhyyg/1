@@ -4,7 +4,7 @@ const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const Partners = preload("res://partner_system.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
-const PortraitFrames = preload("res://ui/portrait_frames.gd")
+const PortraitMotion = preload("res://ui/portrait_motion.gd")
 
 var characters: Array[Dictionary] = []
 var selected_id := ""
@@ -21,7 +21,6 @@ var status_label: Label
 var action_button: Button
 var list_box: VBoxContainer
 var character_buttons: Array[Button] = []
-var portrait_frames: PortraitFrames
 
 func _ready() -> void:
 	UI.setup(self, true)
@@ -77,9 +76,9 @@ func _ready() -> void:
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
-	portrait_frames = PortraitFrames.new()
-	portrait_frames.setup(portrait)
-	add_child(portrait_frames)
+	var portrait_motion := PortraitMotion.new()
+	portrait_motion.setup(portrait, 0.8)
+	add_child(portrait_motion)
 	portrait_placeholder = UI.label(self, "立绘待补充", Rect2(400, 478, 240, 40), 20, UI.MUTED)
 	name_label = UI.label(self, "", Rect2(56, 274, 256, 60), 38)
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -153,7 +152,6 @@ func _select(id: String) -> void:
 	var accent := Color.from_string(str(character.get("accent", "#66E7DA")), UI.CYAN)
 	quote_label.add_theme_color_override("font_color", accent)
 	portrait.texture = Partners.portrait_texture(character)
-	portrait_frames.set_character(id)
 	portrait_placeholder.visible = portrait.texture == null
 	var owned := Partners.is_owned(get_tree(), id)
 	var active := str(get_tree().get_meta("partner_profile", {}).get("active", "")) if owned else ""
