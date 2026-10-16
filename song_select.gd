@@ -259,7 +259,10 @@ func _build_difficulty_buttons(song: Dictionary) -> void:
 
 func _select_difficulty(key: String) -> void:
 	selected_difficulty_key = key
+	if selected_index < songs.size():
+		level_label.text = RatingSystem.level_text_for_difficulty(songs[selected_index], selected_difficulty_key)
 	_update_difficulty_button_styles()
+	_update_best_score_display()
 
 func _update_difficulty_button_styles() -> void:
 	if difficulty_box == null:
@@ -290,9 +293,10 @@ func _select_song(index: int) -> void:
 	var song: Dictionary = songs[index]
 	_start_preview(song)
 	title_label.text = str(song.get("title", "未命名歌曲"))
-	level_label.text = RatingSystem.level_text(song)
+	level_label.text = RatingSystem.level_text_for_difficulty(song, selected_difficulty_key)
 	_update_best_score_display()
 	_build_difficulty_buttons(song)
+	level_label.text = RatingSystem.level_text_for_difficulty(song, selected_difficulty_key)
 	var artwork_path := str(song["folder"]) + "/" + str(song.get("artwork", "artwork.png"))
 	if ResourceLoader.exists(artwork_path):
 		artwork.texture = load(artwork_path)
@@ -317,10 +321,13 @@ func _update_best_score_display() -> void:
 		return
 	var song_folder := str(songs[selected_index].get("folder", ""))
 	var song_id := song_folder.get_file()
-	if not best_scores.has(song_id):
+	var key := RatingSystem.score_key(song_id, selected_difficulty_key)
+	if not best_scores.has(key) and selected_difficulty_key == "advanced":
+		key = song_id
+	if not best_scores.has(key):
 		best_score_label.text = "BEST   —          ·          最高分   0000000"
 		return
-	var record: Dictionary = best_scores[song_id]
+	var record: Dictionary = best_scores[key]
 	best_score_label.text = "BEST   %s          ·          最高分   %07d" % [
 		str(record.get("grade", "-")),
 		int(record.get("best_score", 0))

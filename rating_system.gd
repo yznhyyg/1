@@ -15,6 +15,28 @@ static func constant_for(song: Dictionary) -> float:
 		return 0.0
 	return snappedf(number, 0.1)
 
+static func score_key(song_id: String, difficulty: String = "advanced") -> String:
+	var clean_id := song_id.strip_edges()
+	var clean_difficulty := difficulty.strip_edges()
+	return clean_id if clean_difficulty.is_empty() else "%s::%s" % [clean_id, clean_difficulty]
+
+static func difficulty_data(song: Dictionary, difficulty: String = "advanced") -> Dictionary:
+	var difficulties = song.get("difficulties", {})
+	if difficulties is Dictionary:
+		var item = difficulties.get(difficulty, {})
+		if item is Dictionary:
+			return item
+	return {}
+
+static func constant_for_difficulty(song: Dictionary, difficulty: String = "advanced") -> float:
+	var item := difficulty_data(song, difficulty)
+	if not item.is_empty():
+		return constant_for(item) if item.has("constant") else constant_for(song)
+	return constant_for(song)
+
+static func level_text_for_difficulty(song: Dictionary, difficulty: String = "advanced") -> String:
+	return level_text({"constant": constant_for_difficulty(song, difficulty)})
+
 static func level_text(song: Dictionary) -> String:
 	var constant := constant_for(song)
 	if constant <= 0.0:
@@ -59,15 +81,24 @@ static func load_catalog() -> Array[Dictionary]:
 
 static func personal_rating(songs: Array[Dictionary], scores: Dictionary) -> float:
 	var ratings: Array[float] = []
-	var seen: Dictionary = {}
 	for song in songs:
 		var song_id := str(song.get("folder", "")).get_file()
-		if song_id.is_empty() or seen.has(song_id):
+		if song_id.is_empty():
 			continue
-		seen[song_id] = true
-		var record = scores.get(song_id, {})
-		if record is Dictionary:
-			ratings.append(song_rating(constant_for(song), int(record.get("best_score", 0))))
+		var difficulties = song.get("difficulties", {})
+		if difficulties is Dictionary and not difficulties.is_empty():
+			for difficulty in difficulties.keys():
+				var key := score_key(song_id, str(difficulty))
+				var record = scores.get(key, {})
+				# Legacy records without a difficulty belong to the advanced chart.
+				if str(difficulty) == "advanced" and (not record is Dictionary or record.is_empty()):
+					record = scores.get(song_id, {})
+				if record is Dictionary:
+					ratings.append(song_rating(constant_for_difficulty(song, str(difficulty)), int(record.get("best_score", 0))))
+		else:
+			var record = scores.get(song_id, {})
+			if record is Dictionary:
+				ratings.append(song_rating(constant_for(song), int(record.get("best_score", 0))))
 	ratings.sort()
 	ratings.reverse()
 	var total := 0.0
@@ -83,12 +114,15 @@ static func remember_best(scores: Dictionary, result: Dictionary) -> void:
 	var song_id := str(result.get("song_id", ""))
 	if song_id.is_empty():
 		return
-	var previous = scores.get(song_id, {})
+	var has_difficulty := result.has("difficulty") or result.has("score_key")
+	var difficulty := str(result.get("difficulty", "advanced"))
+	var key := str(result.get("score_key", score_key(song_id, difficulty) if has_difficulty else song_id))
+	var previous = scores.get(key, {})
 	var score := int(result.get("score", 0))
 	if previous is Dictionary and int(previous.get("best_score", -1)) > score:
 		return
-	scores[song_id] = {
-		"song_id": song_id, "best_score": score, "grade": grade_for(score),
+	scores[key] = {
+		"song_id": song_id, "difficulty": difficulty, "best_score": score, "grade": grade_for(score),
 		"max_combo": int(result.get("max_combo", 0)),
 		"perfect_count": int(result.get("perfect", 0)), "great_count": int(result.get("great", 0)),
 		"good_count": int(result.get("good", 0)), "miss_count": int(result.get("miss", 0))

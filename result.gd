@@ -73,11 +73,12 @@ func _ready() -> void:
 	rating_after = RatingSystem.personal_rating(songs, cached)
 	rating_increase = maxf(rating_after - rating_before, 0.0)
 	var constant := 0.0
+	var difficulty_id := str(data.get("difficulty", "advanced"))
 	for song in songs:
 		if str(song.get("folder", "")).get_file() == str(data.get("song_id", "")):
-			constant = RatingSystem.constant_for(song)
+			constant = RatingSystem.constant_for_difficulty(song, difficulty_id)
 			break
-	song_rating_label = UI.label(self, RatingSystem.level_text({"constant": constant}), Rect2(64, 765, 592, 38), 22, UI.CYAN)
+	song_rating_label = UI.label(self, "%s · %s" % [RatingSystem.level_text({"constant": constant}), difficulty_id], Rect2(64, 765, 592, 38), 22, UI.CYAN)
 	song_rating_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var heading := UI.label(self, "RATING", Rect2(64, 808, 592, 28), 18, UI.MUTED)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -123,14 +124,15 @@ func _cloud_headers(include_json: bool = false) -> PackedStringArray:
 func _check_cloud_best_score() -> void:
 	var user_id := _get_user_id()
 	var song_id := str(data.get("song_id", ""))
+	var score_key := str(data.get("score_key", RatingSystem.score_key(song_id, str(data.get("difficulty", "advanced")))))
 	if user_id.is_empty() or song_id.is_empty():
 		upload_status.text = "未登录或歌曲编号缺失，成绩仅保存在本次游戏中"
 		return
 
 	# 旧纪录已经在登录时加载到内存，无需在结算页再次请求服务器。
 	var cached = get_tree().get_meta("song_scores", {})
-	if cached is Dictionary and cached.has(song_id):
-		var old_record = cached[song_id]
+	if cached is Dictionary and (cached.has(score_key) or (str(data.get("difficulty", "advanced")) == "advanced" and cached.has(song_id))):
+		var old_record = cached[score_key] if cached.has(score_key) else cached[song_id]
 		if old_record is Dictionary:
 			var old_score := int(old_record.get("best_score", 0))
 			if old_score > int(data.get("score", 0)):
@@ -146,7 +148,7 @@ func _upload_score() -> void:
 	headers.append("Prefer: resolution=merge-duplicates,return=minimal")
 	var body := {
 		"user_id": _get_user_id(),
-		"song_id": str(data.get("song_id", "")),
+		"song_id": str(data.get("score_key", RatingSystem.score_key(str(data.get("song_id", "")), str(data.get("difficulty", "advanced"))))),
 		"best_score": int(data.get("score", 0)),
 		"max_combo": int(data.get("max_combo", 0)),
 		"perfect_count": int(data.get("perfect", 0)),
