@@ -212,7 +212,7 @@ func _create_song_buttons() -> void:
 	song_buttons.clear()
 	for index in songs.size():
 		var button := Button.new()
-		button.text = "  %02d     %s     ·     %s" % [index + 1, str(songs[index].get("title", "未命名歌曲")), RatingSystem.level_text(songs[index])]
+		button.text = "  %02d     %s" % [index + 1, str(songs[index].get("title", "未命名歌曲"))]
 		button.custom_minimum_size = Vector2(656, 64)
 		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
