@@ -1,0 +1,42 @@
+class_name PortraitFrames
+extends Node
+
+## Optional frame animation layer for characters with hand or hair motion.
+## Files use the convention assets/characters/frames/<id>_idle_0.png ...
+
+var target: TextureRect
+var character_id := ""
+var frames: Array[Texture2D] = []
+var frame_durations := [0.42, 0.28, 0.62, 0.48]
+var elapsed := 0.0
+var cycle_length := 1.8
+
+func setup(control: TextureRect) -> void:
+	target = control
+	set_process(true)
+
+func set_character(id: String) -> void:
+	character_id = id
+	frames.clear()
+	for index in range(4):
+		var path := "res://assets/characters/frames/%s_idle_%d.png" % [character_id, index]
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+			if texture != null:
+				frames.append(texture)
+	elapsed = 0.0
+	if not frames.is_empty() and is_instance_valid(target):
+		target.texture = frames[0]
+
+func _process(delta: float) -> void:
+	if frames.size() < 2 or not is_instance_valid(target):
+		return
+	elapsed = fmod(elapsed + delta, cycle_length)
+	var cursor := 0.0
+	for index in mini(frames.size(), frame_durations.size()):
+		cursor += frame_durations[index]
+		if elapsed < cursor:
+			target.texture = frames[index]
+			return
+	# If a future animation has more frames than duration entries, hold its last frame.
+	target.texture = frames.back()

@@ -8,6 +8,7 @@ const RatingDigits = preload("res://ui/rating_digits.gd")
 const RatingPattern = preload("res://ui/rating_pattern.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
 const PortraitMotion = preload("res://ui/portrait_motion.gd")
+const PortraitFrames = preload("res://ui/portrait_frames.gd")
 
 var personal_rating_label: Label
 var partner_portrait: TextureRect
@@ -15,6 +16,7 @@ var character_background: TextureRect
 var start_button: Button
 var partner_button: Button
 var characters_button: Button
+var portrait_frames: PortraitFrames
 
 # Rating frame candidates: 1 = violet capsule, 2 = cyan glass, 3 = sharp neon.
 # Keep this value at 2 for the current default; it can be changed after previewing.
@@ -63,6 +65,10 @@ func _ready() -> void:
 	var portrait_motion := PortraitMotion.new()
 	portrait_motion.setup(partner_portrait, 1.0)
 	add_child(portrait_motion)
+	portrait_frames = PortraitFrames.new()
+	portrait_frames.setup(partner_portrait)
+	portrait_frames.set_character(str(character.get("id", "")))
+	add_child(portrait_frames)
 	if partner_portrait.texture == null:
 		UI.label(self, "立绘待补充", Rect2(330, 580, 320, 48), 20, UI.MUTED)
 	# A transparent hit area stays to the right of the home controls.
