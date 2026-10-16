@@ -4,7 +4,6 @@ const UI = preload("res://ui/rhythm_ui.gd")
 const Brand = preload("res://ui/brand.gd")
 const Partners = preload("res://partner_system.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
-const PortraitMotion = preload("res://ui/portrait_motion.gd")
 const PortraitFrames = preload("res://ui/portrait_frames.gd")
 
 var characters: Array[Dictionary] = []
@@ -78,9 +77,6 @@ func _ready() -> void:
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
-	var portrait_motion := PortraitMotion.new()
-	portrait_motion.setup(portrait, 0.25)
-	add_child(portrait_motion)
 	portrait_frames = PortraitFrames.new()
 	portrait_frames.setup(portrait)
 	add_child(portrait_frames)

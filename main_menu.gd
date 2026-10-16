@@ -7,7 +7,6 @@ const Brand = preload("res://ui/brand.gd")
 const RatingDigits = preload("res://ui/rating_digits.gd")
 const RatingPattern = preload("res://ui/rating_pattern.gd")
 const Atmosphere = preload("res://ui/atmosphere.gd")
-const PortraitMotion = preload("res://ui/portrait_motion.gd")
 const PortraitFrames = preload("res://ui/portrait_frames.gd")
 
 var personal_rating_label: Label
@@ -62,9 +61,6 @@ func _ready() -> void:
 	partner_portrait.offset_top = 164
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
-	var portrait_motion := PortraitMotion.new()
-	portrait_motion.setup(partner_portrait, 0.35)
-	add_child(portrait_motion)
 	portrait_frames = PortraitFrames.new()
 	portrait_frames.setup(partner_portrait)
 	portrait_frames.set_character(str(character.get("id", "")))
