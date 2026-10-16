@@ -142,13 +142,13 @@ func _process(delta: float) -> void:
 	portrait_elapsed += delta
 	if is_instance_valid(portrait):
 		var t := portrait_elapsed
-		var drift := sin(t * 0.47 + 1.1) * 1.35 + sin(t * 0.29 + 0.2) * 0.65 + sin(t * 0.13 + 2.4) * 0.35
+		var drift := sin(t * 0.47 + 1.1) * 2.25 + sin(t * 0.29 + 0.2) * 1.0 + sin(t * 0.13 + 2.4) * 0.5
 		portrait.position.y = portrait_base_position.y + drift
-		var tilt := sin(t * 0.36 + 1.5) * 0.11 + sin(t * 0.19) * 0.05
+		var tilt := sin(t * 0.36 + 1.5) * 0.18 + sin(t * 0.19) * 0.07
 		portrait.rotation = deg_to_rad(tilt)
 		var breath_phase := 0.5 + 0.5 * sin(t * 0.44 + 1.2)
 		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
-		var breath := 1.0 + (breath_ease - 0.5) * 0.003
+		var breath := 1.0 + (breath_ease - 0.5) * 0.0045
 		portrait.scale = Vector2(breath, breath)
 
 func _select(id: String) -> void:

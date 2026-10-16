@@ -170,13 +170,13 @@ func _process(delta: float) -> void:
 	if is_instance_valid(partner_portrait):
 		var t := portrait_elapsed
 		# Layered low-frequency drift avoids the rigid single-sine loop.
-		var drift := sin(t * 0.53 + 0.4) * 1.7 + sin(t * 0.31 + 1.7) * 0.9 + sin(t * 0.17 + 2.6) * 0.45
+		var drift := sin(t * 0.53 + 0.4) * 2.7 + sin(t * 0.31 + 1.7) * 1.35 + sin(t * 0.17 + 2.6) * 0.65
 		partner_portrait.position.y = portrait_base_position.y + drift
-		var tilt := sin(t * 0.41 + 0.8) * 0.16 + sin(t * 0.23 + 2.0) * 0.07
+		var tilt := sin(t * 0.41 + 0.8) * 0.25 + sin(t * 0.23 + 2.0) * 0.10
 		partner_portrait.rotation = deg_to_rad(tilt)
 		var breath_phase := 0.5 + 0.5 * sin(t * 0.49 + 0.8)
 		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
-		var breath := 1.0 + (breath_ease - 0.5) * 0.004
+		var breath := 1.0 + (breath_ease - 0.5) * 0.006
 		partner_portrait.scale = Vector2(breath, breath)
 
 func _unhandled_input(event: InputEvent) -> void:
