@@ -692,9 +692,13 @@ func _add_score(result: String) -> void:
 
 func _open_result() -> void:
 	result_sent = true
+	var difficulty_id := str(get_tree().get_meta("selected_song_difficulty", "advanced"))
+	var song_id := song_folder.get_file()
 	get_tree().set_meta("result_data", {
-		# 使用歌曲文件夹名作为云端成绩的稳定编号，例如 song_436。
-		"song_id": song_folder.get_file(),
+		# song_id 保持稳定，score_key 按歌曲和难度区分成绩。
+		"song_id": song_id,
+		"difficulty": difficulty_id,
+		"score_key": RatingSystem.score_key(song_id, difficulty_id),
 		"score": int(round(score)),
 		"perfect": perfect_count,
 		"great": great_count,

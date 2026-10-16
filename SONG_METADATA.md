@@ -5,9 +5,9 @@
 ```json
 "master_enabled": false,
 "difficulties": {
-  "beginner": {"name": "初级", "chart": "beginner_chart.json"},
-  "normal": {"name": "中级", "chart": "normal_chart.json"},
-  "advanced": {"name": "高级", "chart": "advanced_chart.json"}
+  "beginner": {"name": "初级", "constant": 6.0, "chart": "beginner_chart.json"},
+  "normal": {"name": "中级", "constant": 7.5, "chart": "normal_chart.json"},
+  "advanced": {"name": "高级", "constant": 8.5, "chart": "advanced_chart.json"}
 }
 ```
 
@@ -18,3 +18,5 @@
 ```
 
 歌曲共用 `artwork` 曲绘；每个难度使用自己的 chart 文件。
+
+成绩按 `歌曲ID::难度ID` 分开保存；旧版只有歌曲 ID 的成绩会按高级难度兼容读取。

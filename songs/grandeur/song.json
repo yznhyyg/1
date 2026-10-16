@@ -4,15 +4,18 @@
   "difficulties": {
     "beginner": {
       "name": "初级",
-      "chart": "beginner_chart.json"
+      "chart": "beginner_chart.json",
+      "constant": 5.0
     },
     "normal": {
       "name": "中级",
-      "chart": "normal_chart.json"
+      "chart": "normal_chart.json",
+      "constant": 6.5
     },
     "advanced": {
       "name": "高级",
-      "chart": "advanced_chart.json"
+      "chart": "advanced_chart.json",
+      "constant": 7.8
     }
   },
   "chart": "grandeur.json",

@@ -163,6 +163,11 @@ static func grant_score_rewards(tree: SceneTree, scores: Dictionary, storage_dir
 		var song_id := str(unlock.get("song_id", ""))
 		var required_score := int(unlock.get("score", 0))
 		var record = scores.get(song_id, {})
+		# New difficulty scores use song_id::difficulty keys; any difficulty can satisfy a song reward.
+		if not record is Dictionary or int(record.get("best_score", 0)) < required_score:
+			for score_key in scores.keys():
+				if str(score_key).begins_with(song_id + "::") and scores[score_key] is Dictionary and int(scores[score_key].get("best_score", 0)) > int(record.get("best_score", 0)):
+					record = scores[score_key]
 		if song_id.is_empty() or required_score <= 0 or not record is Dictionary:
 			continue
 		if int(record.get("best_score", 0)) < required_score:
