@@ -2,20 +2,6 @@
   "title": "Grandeur",
   "constant": 7.8,
   "difficulties": {
-<<<<<<< HEAD
-	"beginner": {
-	  "name": "初级",
-	  "chart": "beginner_chart.json"
-	},
-	"normal": {
-	  "name": "中级",
-	  "chart": "normal_chart.json"
-	},
-	"advanced": {
-	  "name": "高级",
-	  "chart": "advanced_chart.json"
-	}
-=======
     "beginner": {
       "name": "初级",
       "chart": "beginner_chart.json",
@@ -31,20 +17,19 @@
       "chart": "advanced_chart.json",
       "constant": 7.8
     }
->>>>>>> ff135bb855893ba743bc506ed90492999492be91
   },
   "chart": "grandeur.json",
   "music": "grandeur.ogg",
   "artwork": "grandeur.png",
   "preview": {
-	"start": 58.0,
-	"duration": 32.0,
-	"fade_in": 1.0,
-	"fade_out": 1.0
+    "start": 58.0,
+    "duration": 32.0,
+    "fade_in": 1.0,
+    "fade_out": 1.0
   },
   "count_in": {
-	"bpm": 120.0,
-	"beats": 4
+    "bpm": 120.0,
+    "beats": 4
   },
   "master_enabled": false
 }

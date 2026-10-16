@@ -2,20 +2,6 @@
   "title": "leisure",
   "constant": 8.5,
   "difficulties": {
-<<<<<<< HEAD
-	"beginner": {
-	  "name": "初级",
-	  "chart": "beginner_chart.json"
-	},
-	"normal": {
-	  "name": "中级",
-	  "chart": "normal_chart.json"
-	},
-	"advanced": {
-	  "name": "高级",
-	  "chart": "advanced_chart.json"
-	}
-=======
     "beginner": {
       "name": "初级",
       "chart": "beginner_chart.json",
@@ -31,20 +17,19 @@
       "chart": "advanced_chart.json",
       "constant": 8.5
     }
->>>>>>> ff135bb855893ba743bc506ed90492999492be91
   },
   "chart": "chart.json",
   "music": "music.ogg",
   "artwork": "artwork.png",
   "preview": {
-	"start": 66.0,
-	"duration": 31.0,
-	"fade_in": 1.0,
-	"fade_out": 1.0
+    "start": 66.0,
+    "duration": 31.0,
+    "fade_in": 1.0,
+    "fade_out": 1.0
   },
   "count_in": {
-	"bpm": 240.0,
-	"beats": 4
+    "bpm": 240.0,
+    "beats": 4
   },
   "master_enabled": false
 }
