@@ -26,7 +26,7 @@ func _draw() -> void:
 		Vector2(118, 936), Vector2(296, 1010), Vector2(570, 902), Vector2(658, 1138)
 	]
 	for index in points.size():
-		var pulse := 0.72 + sin(elapsed * 0.7 + float(index) * 1.8) * 0.28
+		var pulse := 0.78 + sin(elapsed * 0.53 + float(index) * 1.8) * 0.12 + sin(elapsed * 0.91 + float(index)) * 0.06
 		var point: Vector2 = points[index] * scale
 		draw_circle(point, (1.4 + float(index % 2)) * scale.x, dust if index % 3 else dust_soft * pulse)
 
@@ -38,7 +38,8 @@ func _draw_meteor(origin: Vector2, cycle: float, phase_offset: float, scale: Vec
 	if phase > 1.45:
 		return
 	var progress := phase / 1.45
-	var position := origin + Vector2(-progress * 260.0, progress * 190.0)
+	var eased := progress * progress * (3.0 - 2.0 * progress)
+	var position := origin + Vector2(-eased * 260.0, eased * 190.0)
 	var alpha := sin(progress * PI) * 0.68
 	var head := position * scale
 	var tail := (position + Vector2(74.0, -54.0)) * scale

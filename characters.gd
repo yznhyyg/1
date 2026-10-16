@@ -77,6 +77,7 @@ func _ready() -> void:
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
+	portrait.pivot_offset = portrait.size * 0.5
 	portrait_base_position = portrait.position
 	portrait_placeholder = UI.label(self, "立绘待补充", Rect2(400, 478, 240, 40), 20, UI.MUTED)
 	name_label = UI.label(self, "", Rect2(56, 274, 256, 60), 38)
@@ -140,8 +141,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	portrait_elapsed += delta
 	if is_instance_valid(portrait):
-		portrait.position.y = portrait_base_position.y + sin(portrait_elapsed * 0.78 + 0.6) * 2.5
-		var breath := 1.0 + sin(portrait_elapsed * 0.58) * 0.003
+		var t := portrait_elapsed
+		var drift := sin(t * 0.47 + 1.1) * 1.35 + sin(t * 0.29 + 0.2) * 0.65 + sin(t * 0.13 + 2.4) * 0.35
+		portrait.position.y = portrait_base_position.y + drift
+		var tilt := sin(t * 0.36 + 1.5) * 0.11 + sin(t * 0.19) * 0.05
+		portrait.rotation = deg_to_rad(tilt)
+		var breath_phase := 0.5 + 0.5 * sin(t * 0.44 + 1.2)
+		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
+		var breath := 1.0 + (breath_ease - 0.5) * 0.003
 		portrait.scale = Vector2(breath, breath)
 
 func _select(id: String) -> void:

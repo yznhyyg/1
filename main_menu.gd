@@ -61,6 +61,7 @@ func _ready() -> void:
 	partner_portrait.offset_top = 164
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
+	partner_portrait.pivot_offset = partner_portrait.size * 0.5
 	portrait_base_position = partner_portrait.position
 	if partner_portrait.texture == null:
 		UI.label(self, "立绘待补充", Rect2(330, 580, 320, 48), 20, UI.MUTED)
@@ -167,8 +168,15 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	portrait_elapsed += delta
 	if is_instance_valid(partner_portrait):
-		partner_portrait.position.y = portrait_base_position.y + sin(portrait_elapsed * 0.85) * 3.0
-		var breath := 1.0 + sin(portrait_elapsed * 0.62 + 0.8) * 0.004
+		var t := portrait_elapsed
+		# Layered low-frequency drift avoids the rigid single-sine loop.
+		var drift := sin(t * 0.53 + 0.4) * 1.7 + sin(t * 0.31 + 1.7) * 0.9 + sin(t * 0.17 + 2.6) * 0.45
+		partner_portrait.position.y = portrait_base_position.y + drift
+		var tilt := sin(t * 0.41 + 0.8) * 0.16 + sin(t * 0.23 + 2.0) * 0.07
+		partner_portrait.rotation = deg_to_rad(tilt)
+		var breath_phase := 0.5 + 0.5 * sin(t * 0.49 + 0.8)
+		var breath_ease := breath_phase * breath_phase * (3.0 - 2.0 * breath_phase)
+		var breath := 1.0 + (breath_ease - 0.5) * 0.004
 		partner_portrait.scale = Vector2(breath, breath)
 
 func _unhandled_input(event: InputEvent) -> void:
