@@ -72,7 +72,8 @@ func _ready() -> void:
 	title_label.add_theme_font_size_override("font_size", 30)
 	add_child(title_label)
 
-	level_label = UI.label(self, "LV —", Rect2(504, 151, 160, 47), 24, UI.CYAN)
+	level_label = UI.label(self, "", Rect2(504, 151, 160, 47), 24, UI.CYAN)
+	level_label.visible = false
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var now_playing := Label.new()
 	now_playing.text = "TRACK PREVIEW / 曲目试听"
