@@ -1,15 +1,20 @@
 # 歌曲难度信息
 
-每首歌曲的 `song.json` 可以使用 `difficulties` 数组记录可用难度：
+每首歌曲的 `song.json` 使用 `master_enabled` 控制大师难度，并用 `difficulties` 对象关联各难度谱面：
 
 ```json
-"difficulties": ["初级", "中级", "高级"]
+"master_enabled": false,
+"difficulties": {
+  "beginner": {"name": "初级", "chart": "beginner_chart.json"},
+  "normal": {"name": "中级", "chart": "normal_chart.json"},
+  "advanced": {"name": "高级", "chart": "advanced_chart.json"}
+}
 ```
 
-有大师难度的歌曲追加一项即可：
+需要大师难度时，将 `master_enabled` 改为 `true`，并加入：
 
 ```json
-"difficulties": ["初级", "中级", "高级", "大师"]
+"master": {"name": "大师", "chart": "master_chart.json"}
 ```
 
-这个字段目前只作为歌曲信息保存，不会改变现有谱面加载和判定逻辑。
+歌曲共用 `artwork` 曲绘；每个难度使用自己的 chart 文件。
