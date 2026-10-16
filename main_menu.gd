@@ -63,7 +63,7 @@ func _ready() -> void:
 	partner_portrait.offset_bottom = 1094
 	add_child(partner_portrait)
 	var portrait_motion := PortraitMotion.new()
-	portrait_motion.setup(partner_portrait, 1.0)
+	portrait_motion.setup(partner_portrait, 0.35)
 	add_child(portrait_motion)
 	portrait_frames = PortraitFrames.new()
 	portrait_frames.setup(partner_portrait)

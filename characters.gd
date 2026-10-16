@@ -79,7 +79,7 @@ func _ready() -> void:
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(portrait)
 	var portrait_motion := PortraitMotion.new()
-	portrait_motion.setup(portrait, 0.78)
+	portrait_motion.setup(portrait, 0.25)
 	add_child(portrait_motion)
 	portrait_frames = PortraitFrames.new()
 	portrait_frames.setup(portrait)
