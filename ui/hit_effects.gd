@@ -7,7 +7,7 @@ const COLORS := {
 	"Great": Color("#4CA3FF"),
 	"Good": Color("#55D66B")
 }
-const LIFETIME := 0.36
+const LIFETIME := 0.40
 const MAX_BURSTS := 32
 const ARC_STEPS := 14
 
@@ -55,18 +55,18 @@ func _draw_burst(burst: Dictionary) -> void:
 	var radius: float = lerpf(15.0, 46.0, expansion)
 	for side in range(2):
 		var start: float = -2.95 + float(side) * PI + progress * 0.38
-		_draw_arc_strip(radius, start, 1.15, 3.0 * (1.0 - progress * 0.7), tint, fade)
-		_draw_arc_strip(radius - 5.5, start + 0.12, 0.78, 1.1, tint, fade * 0.4)
+		_draw_arc_strip(radius, start, 1.15, 4.2 * (1.0 - progress * 0.7), tint, minf(fade * 1.35, 1.0))
+		_draw_arc_strip(radius - 5.5, start + 0.12, 0.78, 1.65, tint, minf(fade * 0.62, 1.0))
 	# Short-lived center flash and horizontal impact line.
 	var flash: float = pow(maxf(1.0 - progress / 0.48, 0.0), 2.0)
 	if flash > 0.0:
-		draw_circle(Vector2.ZERO, 7.0 * flash + 2.0, Color(tint, flash * 0.16))
-		draw_line(Vector2(-39, 0), Vector2(39, 0), Color(tint, flash), 1.6, true)
+		draw_circle(Vector2.ZERO, 8.5 * flash + 2.0, Color(tint, flash * 0.28))
+		draw_line(Vector2(-42, 0), Vector2(42, 0), Color(tint, minf(flash * 1.2, 1.0)), 2.2, true)
 		var cross := PackedVector2Array([
 			Vector2(-12, 0), Vector2(-2, -2), Vector2(0, -11), Vector2(2, -2),
 			Vector2(12, 0), Vector2(2, 2), Vector2(0, 11), Vector2(-2, 2)
 		])
-		draw_colored_polygon(cross, Color(tint.lightened(0.55), flash))
+		draw_colored_polygon(cross, Color(tint.lightened(0.62), minf(flash * 1.15, 1.0)))
 	# A pair of small tapered shards; no large bloom or screen-wide particles.
 	for side in range(2):
 		var direction := Vector2.from_angle(-0.72 + float(side) * PI)
@@ -76,9 +76,9 @@ func _draw_burst(burst: Dictionary) -> void:
 			point + direction * 5.5, point + normal * 2.1,
 			point - direction * 4.0, point - normal * 1.5
 		])
-		draw_colored_polygon(shard, Color(tint, fade))
+		draw_colored_polygon(shard, Color(tint, minf(fade * 1.25, 1.0)))
 		var speck: Vector2 = direction.rotated(0.7) * lerpf(18.0, 37.0, expansion)
-		draw_circle(speck, 1.15, Color(tint, fade * 0.65))
+		draw_circle(speck, 1.35, Color(tint, minf(fade * 0.9, 1.0)))
 	draw_set_transform(Vector2.ZERO)
 
 func _draw_arc_strip(radius: float, start: float, sweep: float, width: float, tint: Color, alpha: float) -> void:
