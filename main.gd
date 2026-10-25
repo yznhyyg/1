@@ -1,6 +1,9 @@
 extends Node2D
 
 const UI = preload("res://ui/rhythm_ui.gd")
+const HitEffects = preload("res://ui/hit_effects.gd")
+
+var hit_effects: Node2D
 
 
 # 预加载音符场景。
@@ -567,6 +570,7 @@ func _try_judge_lane(lane: int) -> void:
 		result = "Great"
 
 	best_note.set("judged", true)
+	_show_hit_effect(result, lane)
 	combo += 1
 	max_combo = max(max_combo, combo)
 	_update_combo_label()
@@ -627,6 +631,7 @@ func _finish_hold(note: Node, release_time: float) -> void:
 			result = "Good"
 	_add_score(result)
 	_show_judgment(result, int(note.get("lane")), duration)
+	_show_hit_effect(result, int(note.get("lane")))
 	note.queue_free()
 
 
@@ -709,6 +714,19 @@ func _update_score_label() -> void:
 	if score_label != null:
 		score_label.text = "SCORE  %07d" % int(round(score))
 
+
+func _show_hit_effect(judgment: String, lane: int) -> void:
+	if lane < 0 or lane >= LANE_COUNT or not HitEffects.COLORS.has(judgment):
+		return
+	if not is_instance_valid(hit_effects):
+		hit_effects = HitEffects.new()
+		hit_effects.name = "HitEffects"
+		$PlayField.add_child(hit_effects)
+	var center_x: float = lane_start_x + lane_width * (float(lane % 4) + 0.5)
+	var center_y: float = top_judge_line_y if lane >= 4 else bottom_judge_line_y
+	# Layout values are global canvas coordinates; draw in the playfield's space.
+	var local_center: Vector2 = hit_effects.to_local(Vector2(center_x, center_y))
+	hit_effects.emit_hit(local_center, judgment, lane_width, lane >= 4)
 
 func _show_judgment(text: String, lane: int, display_time: float = 0.35) -> void:
 	# 每次判定都创建独立文字，避免连续判定互相覆盖。
